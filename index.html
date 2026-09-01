@@ -120,28 +120,23 @@
       margin-bottom: 12px;
     }
 
-    .voice-controls {
-      display: flex;
-      gap: 6px;
-    }
-
     .voice-btn {
       background: #283042;
       border: 1px solid var(--primary);
       color: var(--primary);
-      padding: 6px 14px;
+      padding: 8px 16px;
       border-radius: 20px;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: background 0.2s;
+      transition: all 0.2s;
     }
 
-    .voice-btn:hover {
-      background: #364057;
+    .voice-btn:active {
+      transform: scale(0.96);
     }
 
     .route-steps {
@@ -205,11 +200,9 @@
   <div class="card" id="routeCard" style="display: none;">
     <div class="route-header">
       <span style="font-size: 0.95rem; color: var(--primary); font-weight: 700;">Пошаговый путь:</span>
-      <div class="voice-controls">
-        <button id="playBtn" class="voice-btn" onclick="toggleAudio()">
-          🔊 Слушать
-        </button>
-      </div>
+      <button id="playBtn" class="voice-btn" onclick="toggleAudio()">
+        ▶ Слушать аудио
+      </button>
     </div>
     <div class="route-steps" id="stepsList"></div>
   </div>
@@ -334,15 +327,15 @@
     });
 
     routeCard.style.display = 'block';
-    loadAndPlayAudio(start, target);
+    setupAudio(start, target);
   }
 
-  function loadAndPlayAudio(start, target) {
+  function setupAudio(start, target) {
     stopAudio();
 
     const fileName = `${start}_${target}.mp3`;
     
-    // Пробуем путь внутри папки audio/ и в корне репозитория
+    // Пробуем найти файл в папке audio/ или в корне
     currentAudio = new Audio(`audio/${fileName}`);
     
     currentAudio.onerror = () => {
@@ -352,8 +345,9 @@
     };
 
     bindAudioEvents(currentAudio);
+    
+    // Пытаемся запустить сразу по тапу выбора маршрута
     currentAudio.play().catch(() => {
-      // Браузеры могут требовать прямого тапа для первого звука
       resetPlayBtn();
     });
   }
@@ -364,17 +358,17 @@
       btn.innerHTML = '⏸ Пауза';
     };
     audio.onpause = () => {
-      btn.innerHTML = '🔊 Слушать';
+      btn.innerHTML = '▶ Слушать аудио';
     };
     audio.onended = () => {
-      btn.innerHTML = '🔊 Слушать';
+      btn.innerHTML = '▶ Слушать аудио';
     };
   }
 
   function toggleAudio() {
     if (!currentAudio) {
       if (currentStart && currentTarget) {
-        loadAndPlayAudio(currentStart, currentTarget);
+        setupAudio(currentStart, currentTarget);
       }
       return;
     }
@@ -397,7 +391,7 @@
 
   function resetPlayBtn() {
     const btn = document.getElementById('playBtn');
-    if (btn) btn.innerHTML = '🔊 Слушать';
+    if (btn) btn.innerHTML = '▶ Слушать аудио';
   }
 
   init();
