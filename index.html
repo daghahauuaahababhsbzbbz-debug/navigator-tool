@@ -126,7 +126,7 @@
       color: var(--primary);
       padding: 8px 16px;
       border-radius: 20px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
@@ -327,54 +327,65 @@
     });
 
     routeCard.style.display = 'block';
-    setupAudio(start, target);
+    prepareAudio(start, target);
   }
 
-  function setupAudio(start, target) {
+  function prepareAudio(start, target) {
     stopAudio();
+    const btn = document.getElementById('playBtn');
+    btn.innerHTML = '▶ Слушать аудио';
 
-    const fileName = `${start}_${target}.mp3`;
-    
-    // Пробуем найти файл в папке audio/ или в корне
-    currentAudio = new Audio(`audio/${fileName}`);
-    
-    currentAudio.onerror = () => {
-      currentAudio = new Audio(fileName);
+    const baseName = `${start}_${target}`;
+    // Возможные варианты путей к файлу
+    const candidates = [
+      `./audio/${baseName}.mp3`,
+      `./audio/${baseName}.MP3`,
+      `./${baseName}.mp3`,
+      `./${baseName}.MP3`
+    ];
+
+    tryLoadAudio(candidates, 0);
+  }
+
+  function tryLoadAudio(candidates, index) {
+    if (index >= candidates.length) {
+      const btn = document.getElementById('playBtn');
+      btn.innerHTML = '⚠️ Файл не найден';
+      return;
+    }
+
+    const audio = new Audio(candidates[index]);
+    audio.preload = 'auto';
+
+    audio.oncanplaythrough = () => {
+      currentAudio = audio;
       bindAudioEvents(currentAudio);
-      currentAudio.play().catch(() => resetPlayBtn());
     };
 
-    bindAudioEvents(currentAudio);
-    
-    // Пытаемся запустить сразу по тапу выбора маршрута
-    currentAudio.play().catch(() => {
-      resetPlayBtn();
-    });
+    audio.onerror = () => {
+      tryLoadAudio(candidates, index + 1);
+    };
   }
 
   function bindAudioEvents(audio) {
     const btn = document.getElementById('playBtn');
-    audio.onplay = () => {
-      btn.innerHTML = '⏸ Пауза';
-    };
-    audio.onpause = () => {
-      btn.innerHTML = '▶ Слушать аудио';
-    };
-    audio.onended = () => {
-      btn.innerHTML = '▶ Слушать аудио';
-    };
+    audio.onplay = () => { btn.innerHTML = '⏸ Пауза'; };
+    audio.onpause = () => { btn.innerHTML = '▶ Слушать аудио'; };
+    audio.onended = () => { btn.innerHTML = '▶ Слушать аудио'; };
   }
 
   function toggleAudio() {
     if (!currentAudio) {
       if (currentStart && currentTarget) {
-        setupAudio(currentStart, currentTarget);
+        prepareAudio(currentStart, currentTarget);
       }
       return;
     }
 
     if (currentAudio.paused) {
-      currentAudio.play();
+      currentAudio.play().catch(err => {
+        console.error("Playback error:", err);
+      });
     } else {
       currentAudio.pause();
     }
@@ -386,10 +397,6 @@
       currentAudio.currentTime = 0;
       currentAudio = null;
     }
-    resetPlayBtn();
-  }
-
-  function resetPlayBtn() {
     const btn = document.getElementById('playBtn');
     if (btn) btn.innerHTML = '▶ Слушать аудио';
   }
