@@ -126,7 +126,7 @@
       color: var(--primary);
       padding: 8px 16px;
       border-radius: 20px;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
@@ -327,21 +327,19 @@
     });
 
     routeCard.style.display = 'block';
-    prepareAudio(start, target);
+    setupAudio(start, target);
   }
 
-  function prepareAudio(start, target) {
+  function setupAudio(start, target) {
     stopAudio();
-    const btn = document.getElementById('playBtn');
-    btn.innerHTML = '▶ Слушать аудио';
 
-    const baseName = `${start}_${target}`;
-    // Возможные варианты путей к файлу
+    const base = `${start}_${target}`;
+    // Проверяем как имя с двойным .mp3.mp3, так и стандартное
     const candidates = [
-      `./audio/${baseName}.mp3`,
-      `./audio/${baseName}.MP3`,
-      `./${baseName}.mp3`,
-      `./${baseName}.MP3`
+      `audio/${base}.mp3.mp3`,
+      `audio/${base}.mp3`,
+      `${base}.mp3.mp3`,
+      `${base}.mp3`
     ];
 
     tryLoadAudio(candidates, 0);
@@ -355,11 +353,13 @@
     }
 
     const audio = new Audio(candidates[index]);
-    audio.preload = 'auto';
+    currentAudio = audio;
+    bindAudioEvents(audio);
 
-    audio.oncanplaythrough = () => {
-      currentAudio = audio;
-      bindAudioEvents(currentAudio);
+    audio.oncanplay = () => {
+      audio.play().catch(() => {
+        resetPlayBtn();
+      });
     };
 
     audio.onerror = () => {
@@ -377,15 +377,13 @@
   function toggleAudio() {
     if (!currentAudio) {
       if (currentStart && currentTarget) {
-        prepareAudio(currentStart, currentTarget);
+        setupAudio(currentStart, currentTarget);
       }
       return;
     }
 
     if (currentAudio.paused) {
-      currentAudio.play().catch(err => {
-        console.error("Playback error:", err);
-      });
+      currentAudio.play();
     } else {
       currentAudio.pause();
     }
@@ -397,6 +395,10 @@
       currentAudio.currentTime = 0;
       currentAudio = null;
     }
+    resetPlayBtn();
+  }
+
+  function resetPlayBtn() {
     const btn = document.getElementById('playBtn');
     if (btn) btn.innerHTML = '▶ Слушать аудио';
   }
