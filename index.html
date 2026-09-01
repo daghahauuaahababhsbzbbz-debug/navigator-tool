@@ -318,9 +318,17 @@
     }
   };
 
-  // Автоматический подбор фото по ключевым словам шага
-  function matchStepPhoto(stepText) {
+  // Подбор фото с учетом текущего маршрута
+  function matchStepPhoto(stepText, start, target) {
     const t = stepText.toLowerCase();
+
+    // Для маршрута Буфет -> Администрация полностью исключаем показ фото лесенок со ступенями
+    if (start === 'buffet' && target === 'admin') {
+      if (t.includes("металлическ") || t.includes("стеклянн")) return "point_metal_glass_door.jpg";
+      if (t.includes("3 этаж") || t.includes("администраци")) return "loc_admin.jpg";
+      return null;
+    }
+
     if (t.includes("зал буфета") || t.includes("буфет") || t.includes("двери буфета")) return "loc_buffet.jpg";
     if (t.includes("основную сцену") || t.includes("на сцену") || t.includes("основной сцены")) return "loc_main_stage.jpg";
     if (t.includes("малая сцена") || t.includes("малому залу") || t.includes("малой сцене")) return "loc_small_stage.jpg";
@@ -329,7 +337,7 @@
     if (t.includes("выход") || t.includes("служебного входа") || t.includes("входа")) return "loc_entrance.jpg";
     if (t.includes("указател") || t.includes("проход к гримёрным")) return "point_sign_dressing.jpg";
     if (t.includes("металлическ") || t.includes("стеклянн")) return "point_metal_glass_door.jpg";
-    if (t.includes("5 ступеней") || t.includes("пяти ступен")) return "point_buffet_stairs_5.jpg";
+    if (t.includes("5 ступеней вверх") && (start === 'entrance' || target === 'buffet')) return "point_buffet_stairs_5.jpg";
     if (t.includes("длинному коридору") || t.includes("длинный коридор")) return "point_long_corridor.jpg";
     if (t.includes("вниз по лестнице")) return "point_stairs_corridor_down.jpg";
     if (t.includes("вверх на 3 этаж") || t.includes("вниз на 3 этажа")) return "point_admin_stairs.jpg";
@@ -397,7 +405,7 @@
       row.className = 'step-item';
 
       let photoHtml = '';
-      const photoName = matchStepPhoto(step);
+      const photoName = matchStepPhoto(step, start, target);
       if (photoName) {
         photoHtml = `
           <div class="step-photo-wrap" onclick="openLightbox('img/${photoName}')">
@@ -423,9 +431,9 @@
   function handleImgError(imgEl, fileName) {
     if (!imgEl.dataset.retried) {
       imgEl.dataset.retried = "true";
-      imgEl.src = fileName; // пробуем корень
+      imgEl.src = fileName;
     } else {
-      imgEl.parentElement.style.display = 'none'; // скрываем блок, если фото не найдено
+      imgEl.parentElement.style.display = 'none';
     }
   }
 
