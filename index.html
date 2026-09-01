@@ -142,19 +142,25 @@
     .route-steps {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .step-item {
       display: flex;
-      align-items: flex-start;
-      gap: 10px;
+      flex-direction: column;
+      gap: 8px;
       font-size: 0.92rem;
       line-height: 1.45;
       background: var(--item-bg);
-      padding: 10px;
+      padding: 12px;
       border-radius: 8px;
       border: 1px solid var(--border);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
     }
 
     .step-num {
@@ -169,6 +175,51 @@
       justify-content: center;
       font-size: 0.8rem;
       margin-top: 1px;
+    }
+
+    .step-photo-wrap {
+      margin-top: 4px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      max-height: 180px;
+      background: #141722;
+      cursor: pointer;
+    }
+
+    .step-photo {
+      width: 100%;
+      height: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.2s;
+    }
+
+    .step-photo:active {
+      transform: scale(0.98);
+    }
+
+    /* Модальное окно просмотра фото */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .lightbox img {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 8px;
+      border: 1px solid var(--border);
     }
   </style>
 </head>
@@ -206,6 +257,10 @@
     </div>
     <div class="route-steps" id="stepsList"></div>
   </div>
+</div>
+
+<div id="lightboxModal" class="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="Фото ориентира">
 </div>
 
 <script>
@@ -262,6 +317,24 @@
       "dressing_rooms": "Через третий этаж пройти мимо кабинетов до лестничной клетки, спуститься на один этаж."
     }
   };
+
+  // Автоматический подбор фото по ключевым словам шага
+  function matchStepPhoto(stepText) {
+    const t = stepText.toLowerCase();
+    if (t.includes("зал буфета") || t.includes("буфет") || t.includes("двери буфета")) return "loc_buffet.jpg";
+    if (t.includes("основную сцену") || t.includes("на сцену") || t.includes("основной сцены")) return "loc_main_stage.jpg";
+    if (t.includes("малая сцена") || t.includes("малому залу") || t.includes("малой сцене")) return "loc_small_stage.jpg";
+    if (t.includes("гримерных") || t.includes("гримёрный") || t.includes("гримерки")) return "loc_dressing_rooms.jpg";
+    if (t.includes("администраци")) return "loc_admin.jpg";
+    if (t.includes("выход") || t.includes("служебного входа") || t.includes("входа")) return "loc_entrance.jpg";
+    if (t.includes("указател") || t.includes("проход к гримёрным")) return "point_sign_dressing.jpg";
+    if (t.includes("металлическ") || t.includes("стеклянн")) return "point_metal_glass_door.jpg";
+    if (t.includes("5 ступеней") || t.includes("пяти ступен")) return "point_buffet_stairs_5.jpg";
+    if (t.includes("длинному коридору") || t.includes("длинный коридор")) return "point_long_corridor.jpg";
+    if (t.includes("вниз по лестнице")) return "point_stairs_corridor_down.jpg";
+    if (t.includes("вверх на 3 этаж") || t.includes("вниз на 3 этажа")) return "point_admin_stairs.jpg";
+    return null;
+  }
 
   let currentStart = 'entrance';
   let currentTarget = null;
@@ -322,7 +395,24 @@
       const formattedStep = step.trim().replace(/^./, str => str.toUpperCase());
       const row = document.createElement('div');
       row.className = 'step-item';
-      row.innerHTML = `<span class="step-num">${idx + 1}</span><span>${formattedStep}.</span>`;
+
+      let photoHtml = '';
+      const photoName = matchStepPhoto(step);
+      if (photoName) {
+        photoHtml = `
+          <div class="step-photo-wrap" onclick="openLightbox('img/${photoName}')">
+            <img src="img/${photoName}" class="step-photo" onerror="handleImgError(this, '${photoName}')" alt="Ориентир">
+          </div>
+        `;
+      }
+
+      row.innerHTML = `
+        <div class="step-header">
+          <span class="step-num">${idx + 1}</span>
+          <span>${formattedStep}.</span>
+        </div>
+        ${photoHtml}
+      `;
       stepsList.appendChild(row);
     });
 
@@ -330,11 +420,30 @@
     setupAudio(start, target);
   }
 
+  function handleImgError(imgEl, fileName) {
+    if (!imgEl.dataset.retried) {
+      imgEl.dataset.retried = "true";
+      imgEl.src = fileName; // пробуем корень
+    } else {
+      imgEl.parentElement.style.display = 'none'; // скрываем блок, если фото не найдено
+    }
+  }
+
+  function openLightbox(src) {
+    const modal = document.getElementById('lightboxModal');
+    const img = document.getElementById('lightboxImg');
+    img.src = src;
+    modal.style.display = 'flex';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightboxModal').style.display = 'none';
+  }
+
   function setupAudio(start, target) {
     stopAudio();
 
     const base = `${start}_${target}`;
-    // Проверяем как имя с двойным .mp3.mp3, так и стандартное
     const candidates = [
       `audio/${base}.mp3.mp3`,
       `audio/${base}.mp3`,
@@ -357,9 +466,7 @@
     bindAudioEvents(audio);
 
     audio.oncanplay = () => {
-      audio.play().catch(() => {
-        resetPlayBtn();
-      });
+      audio.play().catch(() => resetPlayBtn());
     };
 
     audio.onerror = () => {
@@ -383,7 +490,7 @@
     }
 
     if (currentAudio.paused) {
-      currentAudio.play();
+      currentAudio.play().catch(err => console.error(err));
     } else {
       currentAudio.pause();
     }
