@@ -127,8 +127,8 @@ select:focus{border-color:rgba(211,167,96,.55);box-shadow:0 0 0 3px rgba(211,167
 .map-wrap{position:relative;min-height:440px;background:#0c0e11;}
 .map-svg{width:100%;height:440px;display:block}
 .map-floor{fill:#15191e;stroke:#6a6d70;stroke-width:1.4}
-.map-room{fill:#101317;stroke:#34383d;stroke-width:1;transition:all .3s}
-.map-room.active-room{fill:#1c232d;stroke:var(--gold);stroke-width:1.8}
+.map-room{fill:#101317;stroke:#34383d;stroke-width:1}
+.map-room.active-room{fill:#1b2129;stroke:var(--gold);stroke-width:1.5}
 .map-label{fill:#7d8085;font:11px Inter,Arial,sans-serif;letter-spacing:1px}
 .map-small{fill:#555a60;font:9px Inter,Arial,sans-serif;letter-spacing:0.5px}
 .route-line{fill:none;stroke:var(--gold);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:9 8;filter:drop-shadow(0 0 7px rgba(211,167,96,.45));animation:dash 1.3s linear infinite}
@@ -149,21 +149,13 @@ select:focus{border-color:rgba(211,167,96,.55);box-shadow:0 0 0 3px rgba(211,167
 .instruction-step{font-family:Georgia,serif;font-size:24px;line-height:1.22;margin-bottom:9px}
 .instruction-detail{color:var(--muted);font-size:13px;line-height:1.55}
 
-/* Панель MP3 плеера */
 .voice{
   margin-top:18px;width:100%;min-height:50px;border:1px solid var(--line2);background:#0e1013;color:var(--text);
   border-radius:13px;display:flex;align-items:center;justify-content:center;gap:10px;
   font-size:10px;letter-spacing:.13em;text-transform:uppercase;transition:.2s;
 }
 .voice:hover{border-color:rgba(211,167,96,.55)}
-.voice.speaking{border-color:var(--gold);color:var(--gold);background:rgba(211,167,96,.08)}
-
-.audio-progress-wrap{
-  width:100%;height:3px;background:rgba(255,255,255,.08);margin-top:10px;border-radius:2px;overflow:hidden;
-}
-.audio-progress{
-  width:0%;height:100%;background:var(--gold);transition:width .1s linear;
-}
+.voice.speaking{border-color:var(--gold);color:var(--gold)}
 
 .route-list{margin-top:22px}
 .route-item{display:flex;gap:12px;position:relative;padding:0 0 16px}
@@ -295,7 +287,9 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
       <div class="section-title">Быстрый выбор цели</div>
       <div class="section-kicker">Ключевые локации</div>
     </div>
-    <div class="quick-grid" id="quickGrid"></div>
+    <div class="quick-grid" id="quickGrid">
+      <!-- Наполняется динамически скриптом без текущей точки старта -->
+    </div>
   </section>
 
   <section class="route-panel" id="routePanel" aria-live="polite">
@@ -367,9 +361,6 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
         <div class="instruction-detail" id="instructionDetail">Пошаговое описание перемещения по театру.</div>
 
         <button class="voice" id="voiceBtn"><span>▶</span> Слушать аудиоинструкцию</button>
-        <div class="audio-progress-wrap">
-          <div class="audio-progress" id="audioProgress"></div>
-        </div>
 
         <div class="route-list" id="routeList"></div>
       </div>
@@ -433,14 +424,14 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
 
 <script>
 (() => {
-  // PWA Service Worker
+  // 1. PWA Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(() => {});
     });
   }
 
-  // 6 ключевых театральных зон
+  // 2. Локации и координаты на плане
   const locations = {
     entrance:       { name: "Служебный вход", floor: "1 этаж", icon: "🚪", x: 160, y: 135, rect: "room_entrance" },
     buffet:         { name: "Буфет",          floor: "Цоколь", icon: "☕", x: 160, y: 305, rect: "room_buffet" },
@@ -450,7 +441,7 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
     admin:          { name: "Администрация",  floor: "3 этаж", icon: "🏛", x: 610, y: 315, rect: "room_admin" }
   };
 
-  // Проверенная текстовая матрица
+  // 3. Матрица пошаговых текстовых маршрутов
   const matrix = {
     "entrance": {
       "buffet": "Вперёд, направо, налево и вниз по лестнице, по длинному коридору, 5 ступеней вверх, направо в дверь, справа зал буфета.",
@@ -507,7 +498,6 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
   const toPulse = document.getElementById("toPulse");
   const toast = document.getElementById("toast");
   const voiceBtn = document.getElementById("voiceBtn");
-  const audioProgress = document.getElementById("audioProgress");
 
   let currentAudio = null;
 
@@ -596,6 +586,7 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
     const a = locations[fromKey];
     const b = locations[toKey];
 
+    // Подсветка комнат на карте
     if (document.getElementById(a.rect)) document.getElementById(a.rect).classList.add("active-room");
     if (document.getElementById(b.rect)) document.getElementById(b.rect).classList.add("active-room");
 
@@ -617,6 +608,7 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
     document.getElementById("instruction").textContent = steps[0] + ".";
     document.getElementById("instructionDetail").textContent = steps[1] ? steps[1] + "." : "Следуйте к пункту назначения.";
 
+    // Рендер пошаговых инструкций и фото
     const routeListBox = document.getElementById("routeList");
     routeListBox.innerHTML = steps.map((step, idx) => {
       const formatted = step.trim().replace(/^./, str => str.toUpperCase());
@@ -640,30 +632,23 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
     panel.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  // Управление MP3 файлами (без браузерного синтезатора)
+  // Аудиоинструкции (приоритет MP3 -> fallback SpeechSynthesis)
   function stopAudio() {
     if (currentAudio) {
       currentAudio.pause();
       currentAudio.currentTime = 0;
       currentAudio = null;
     }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
     voiceBtn.classList.remove("speaking");
     voiceBtn.innerHTML = "<span>▶</span> Слушать аудиоинструкцию";
-    audioProgress.style.width = "0%";
   }
 
   voiceBtn.addEventListener("click", () => {
-    if (currentAudio && !currentAudio.paused) {
-      currentAudio.pause();
-      voiceBtn.classList.remove("speaking");
-      voiceBtn.innerHTML = "<span>▶</span> Продолжить";
-      return;
-    }
-
-    if (currentAudio && currentAudio.paused) {
-      currentAudio.play();
-      voiceBtn.classList.add("speaking");
-      voiceBtn.innerHTML = "<span>⏸</span> Пауза";
+    if (currentAudio || voiceBtn.classList.contains("speaking")) {
+      stopAudio();
       return;
     }
 
@@ -673,38 +658,43 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
     const candidates = [
       `audio/${base}.mp3.mp3`,
       `audio/${base}.mp3`,
-      `${base}.mp3.mp3`,
       `${base}.mp3`
     ];
 
-    tryPlayAudioFile(candidates, 0);
+    tryPlayAudioFile(candidates, 0, () => {
+      // Fallback на синтез речи, если аудиофайл отсутствует
+      const rawRoute = matrix[fromKey] && matrix[fromKey][toKey];
+      if (!rawRoute || !('speechSynthesis' in window)) {
+        showToast("Голосовая запись для этого направления готовится.");
+        return;
+      }
+      const u = new SpeechSynthesisUtterance(rawRoute);
+      u.lang = "ru-RU";
+      u.rate = 0.95;
+      u.onstart = () => {
+        voiceBtn.classList.add("speaking");
+        voiceBtn.innerHTML = "<span>⏸</span> Идет воспроизведение...";
+      };
+      u.onend = () => stopAudio();
+      window.speechSynthesis.speak(u);
+    });
   });
 
-  function tryPlayAudioFile(candidates, idx) {
+  function tryPlayAudioFile(candidates, idx, onFallback) {
     if (idx >= candidates.length) {
-      showToast("Аудиофайл для этой связки не найден в папке audio.");
-      stopAudio();
+      onFallback();
       return;
     }
-
     const audio = new Audio(candidates[idx]);
-    currentAudio = audio;
-
     audio.oncanplay = () => {
+      currentAudio = audio;
       audio.play().then(() => {
         voiceBtn.classList.add("speaking");
         voiceBtn.innerHTML = "<span>⏸</span> Пауза";
-      }).catch(() => stopAudio());
+      }).catch(() => onFallback());
+      audio.onended = () => stopAudio();
     };
-
-    audio.ontimeupdate = () => {
-      if (audio.duration) {
-        audioProgress.style.width = (audio.currentTime / audio.duration) * 100 + "%";
-      }
-    };
-
-    audio.onended = () => stopAudio();
-    audio.onerror = () => tryPlayAudioFile(candidates, idx + 1);
+    audio.onerror = () => tryPlayAudioFile(candidates, idx + 1, onFallback);
   }
 
   // Репорт ошибки в SMS Руслану (+7 902 876-57-92)
