@@ -379,7 +379,6 @@
       box-shadow: 0 3px 10px var(--call-glow);
     }
 
-    /* Лаконичный футер и кнопка репорта */
     .report-bar {
       display: flex;
       justify-content: center;
@@ -509,7 +508,7 @@
     </div>
   </div>
 
-  <!-- Контекстная кнопка репорта -->
+  <!-- Контекстная кнопка сообщения о неточности -->
   <div class="report-bar">
     <button class="report-btn" onclick="reportRouteIssue()">
       ⚠️ Сообщить о неточности маршрута
@@ -522,7 +521,6 @@
 </div>
 
 <script>
-  // Регистрация Service Worker для офлайн-доступа
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
@@ -808,7 +806,7 @@
     if (progress) progress.style.width = '0%';
   }
 
-  // Контекстный репорт ошибки маршрута
+  // Контекстный репорт неточности техническому директору Руслану
   function reportRouteIssue() {
     const startObj = locations.find(l => l.id === currentStart);
     const targetObj = locations.find(l => l.id === currentTarget);
@@ -816,9 +814,8 @@
       ? `Маршрут: ${startObj.name} → ${targetObj.name}`
       : `Точка старта: ${startObj.name}`;
     
-    const text = `Добрый день! Заметил неточность в навигаторе (${routeInfo}). Описание: `;
-    // Отправка SMS дежурному администратору Оксане с предзаполненным текстом
-    window.location.href = `sms:+79636554021?body=${encodeURIComponent(text)}`;
+    const text = `Добрый день, Руслан! Заметил неточность в навигаторе (${routeInfo}). Описание: `;
+    window.location.href = `sms:+79028765792?body=${encodeURIComponent(text)}`;
   }
 
   init();
