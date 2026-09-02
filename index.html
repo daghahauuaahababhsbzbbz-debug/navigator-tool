@@ -178,6 +178,8 @@ select:focus{border-color:var(--line-gold)}
 .step.done .step-main{color:#aaa}
 .step.active .step-no{font-weight:bold}
 .step.active .step-main{font-weight:700}
+.route-photo{display:block;max-width:220px;width:100%;height:auto;margin-top:12px;border:1px solid var(--line);background:#0b0d0f}
+
 .next{
   margin-top:20px;height:50px;border:0;border-top:1px solid var(--line-gold);
   border-bottom:1px solid var(--line-gold);background:transparent;color:var(--gold-light);
@@ -307,9 +309,9 @@ textarea{
         <select id="from">
           <option value="entrance">Служебный вход</option>
           <option value="buffet">Буфет</option>
-          <option value="stage">Основная сцена</option>
+          <option value="main_stage">Основная сцена</option>
           <option value="small_stage">Малая сцена</option>
-          <option value="dressing">Гримёрный блок</option>
+          <option value="dressing_rooms">Гримёрный блок</option>
           <option value="admin">Администрация</option>
         </select>
       </div>
@@ -320,9 +322,9 @@ textarea{
       <div class="select-wrap">
         <select id="to">
           <option value="buffet">Буфет</option>
-          <option value="stage">Основная сцена</option>
+          <option value="main_stage">Основная сцена</option>
           <option value="small_stage">Малая сцена</option>
-          <option value="dressing">Гримёрный блок</option>
+          <option value="dressing_rooms">Гримёрный блок</option>
           <option value="admin">Администрация</option>
           <option value="entrance">Служебный вход</option>
         </select>
@@ -339,10 +341,10 @@ textarea{
     <div class="section-kicker">быстрый выбор</div>
   </div>
   <div class="quick-grid">
-    <button class="quick-btn" data-dest="stage"><span><span class="quick-name">Основная сцена</span><span class="quick-meta">сценическая зона</span></span><span class="quick-arrow"></span></button>
+    <button class="quick-btn" data-dest="main_stage"><span><span class="quick-name">Основная сцена</span><span class="quick-meta">сценическая зона</span></span><span class="quick-arrow"></span></button>
     <button class="quick-btn" data-dest="buffet"><span><span class="quick-name">Буфет</span><span class="quick-meta">−1 этаж · зона питания</span></span><span class="quick-arrow"></span></button>
     <button class="quick-btn" data-dest="small_stage"><span><span class="quick-name">Малая сцена</span><span class="quick-meta">2 этаж</span></span><span class="quick-arrow"></span></button>
-    <button class="quick-btn" data-dest="dressing"><span><span class="quick-name">Гримёрный блок</span><span class="quick-meta">2 этаж</span></span><span class="quick-arrow"></span></button>
+    <button class="quick-btn" data-dest="dressing_rooms"><span><span class="quick-name">Гримёрный блок</span><span class="quick-meta">2 этаж</span></span><span class="quick-arrow"></span></button>
     <button class="quick-btn" data-dest="admin"><span><span class="quick-name">Администрация</span><span class="quick-meta">3 этаж</span></span><span class="quick-arrow"></span></button>
     <button class="quick-btn" data-dest="entrance"><span><span class="quick-name">Служебный вход</span><span class="quick-meta">−1 этаж</span></span><span class="quick-arrow"></span></button>
   </div>
@@ -452,56 +454,61 @@ textarea{
 <script>
 (() => {
   const locations = {
-    entrance:{name:"Служебный вход",floor:"−1 этаж"},
-    buffet:{name:"Буфет",floor:"−1 этаж"},
-    stage:{name:"Основная сцена",floor:"1 этаж"},
-    small_stage:{name:"Малая сцена",floor:"2 этаж"},
-    dressing:{name:"Гримёрный блок",floor:"2 этаж"},
-    admin:{name:"Администрация",floor:"3 этаж"}
+    entrance:       { name: "Служебный вход", floor: "−1 этаж" },
+    buffet:         { name: "Буфет",          floor: "−1 этаж" },
+    main_stage:     { name: "Основная сцена", floor: "1 этаж" },
+    small_stage:    { name: "Малая сцена",    floor: "2 этаж" },
+    dressing_rooms: { name: "Гримёрный блок", floor: "2 этаж" },
+    admin:          { name: "Администрация",  floor: "3 этаж" }
   };
 
   /*
     Маршруты без карты: здесь хранятся именно текстовые инструкции.
     Позже их можно заменить на точные данные после проверки проходов на площадке.
   */
-  const routes = {
-    "entrance>buffet":[
-      ["Служебный вход","Выйдите из служебного входа и двигайтесь по служебному коридору.","начало маршрута"],
-      ["К лестнице","Следуйте по служебному коридору до лестницы.","ориентир"],
-      ["Переход","Продолжайте движение на −1 этаже.","ориентир"],
-      ["Коридор","Продолжайте движение по коридору на −1 этаже.","следующий ориентир"],
-      ["Буфет","Поверните к зоне буфета. Вы на месте.","назначение"]
-    ],
-    "buffet>entrance":[
-      ["Буфет","Выйдите из зоны буфета в коридор.","начало маршрута"],
-      ["Коридор","Следуйте по коридору до лестницы.","ориентир"],
-      ["Вверх","Поднимитесь на 1 этаж.","переход между этажами"],
-      ["Служебный коридор","Продолжайте движение до служебного входа.","следующий ориентир"],
-      ["Служебный вход","Вы на месте.","назначение"]
-    ],
-    "entrance>stage":[
-      ["Служебный вход","Выйдите в служебный коридор и двигайтесь прямо.","начало маршрута"],
-      ["Коридор","Следуйте по коридору в сторону основной сцены.","ориентир"],
-      ["Основная сцена","Следуйте указателям к сценической зоне. Вы на месте.","назначение"]
-    ],
-    "entrance>small_stage":[
-      ["Служебный вход","Выйдите в служебный коридор.","начало маршрута"],
-      ["Лестница","Следуйте к лестнице на 2 этаж.","ориентир"],
-      ["2 этаж","Поднимитесь на 2 этаж и продолжайте по коридору.","переход между этажами"],
-      ["Малая сцена","Следуйте указателям к малой сцене.","назначение"]
-    ],
-    "entrance>dressing":[
-      ["Служебный вход","Выйдите в служебный коридор.","начало маршрута"],
-      ["Лестница","Следуйте к лестнице на 2 этаж.","ориентир"],
-      ["2 этаж","Поднимитесь и продолжайте по коридору.","переход между этажами"],
-      ["Гримёрный блок","Следуйте указателям к гримёрному блоку.","назначение"]
-    ],
-    "entrance>admin":[
-      ["Служебный вход","Выйдите в служебный коридор.","начало маршрута"],
-      ["Лестница","Следуйте к лестнице, ведущей на верхние этажи.","ориентир"],
-      ["3 этаж","Поднимитесь на 3 этаж.","переход между этажами"],
-      ["Администрация","Следуйте указателям к администрации.","назначение"]
-    ]
+  const matrix = {
+    "entrance": {
+      "buffet": "Вперёд, направо, налево и вниз по лестнице, по длинному коридору, 5 ступеней вверх, направо в дверь, справа зал буфета.",
+      "main_stage": "Вперёд, направо до указателя «Проход к гримёрным», вверх на 1 этаж, налево на сцену.",
+      "small_stage": "Вперёд, направо, налево вниз по лестнице, прямо до конца длинного коридора, направо, вверх на 2 этажа, прямо напротив лестницы малая сцена.",
+      "dressing_rooms": "Вперёд, направо до указателя «Проход к гримёрным», вверх на 2 этажа, прямо по коридору перед вами 4 гримерных.",
+      "admin": "Вперёд, налево до металлической двери со стеклянным блоком, вверх на 3 этаж."
+    },
+    "buffet": {
+      "entrance": "Налево из двери, 5 ступеней вниз, по длинному коридору, вверх по лестнице, направо к выходу.",
+      "main_stage": "Налево из двери, 5 ступеней вниз, по коридору, вверх по лестнице, прямо к указателю «Проход к гримёрным», вверх на 1 этаж, налево на сцену.",
+      "small_stage": "Направо из двери, направо по коридору до конца, направо, вверх на 2 этажа.",
+      "dressing_rooms": "Налево из двери, 5 ступеней вниз, по коридору, вверх 5 ступеней до указателя «Проход к гримёрным», вверх на 2 этажа, прямо по коридору перед вами 4 гримерных.",
+      "admin": "Налево из двери, 5 ступеней вниз, по коридору, вверх 5 ступеней, направо до металлической двери со стеклянным блоком, вверх на 3 этаж."
+    },
+    "main_stage": {
+      "entrance": "Направо в дверь, вниз на 1 этаж, налево по коридору, прямо к выходу.",
+      "buffet": "Направо в дверь, вниз на 1 этаж, прямо к лестнице вниз, по длинному коридору, 5 ступеней вверх, направо.",
+      "small_stage": "Направо в дверь, вниз на 1 этаж, по лестнице вниз в длинный коридор, до конца, направо, вверх на 2 этажа.",
+      "dressing_rooms": "Направо в дверь, вверх на один этаж, прямо по коридору перед вами 4 гримерных.",
+      "admin": "Направо в дверь, вверх на два этажа, налево до конца."
+    },
+    "small_stage": {
+      "entrance": "Вниз на 2 этажа, налево в коридор, прямо до конца, вверх по лестнице, направо к выходу.",
+      "buffet": "Вниз на 2 этажа, налево в коридор, прямо до двери буфета, налево.",
+      "main_stage": "Вниз на 2 этажа, налево в коридор, вверх по лестнице, прямо до указателя «Проход к гримёрным», вверх на 1 этаж, налево на сцену.",
+      "dressing_rooms": "Вниз на два этажа, налево по коридору, до указателя «Проход к гримёрным», вверх на два этажа, прямо по коридору перед вами четыре гримерных.",
+      "admin": "Вниз на два этажа, налево по коридору, до конца, направо до металлической двери со стеклянным блоком, вверх на третий этаж."
+    },
+    "dressing_rooms": {
+      "entrance": "Вниз на 2 этажа, через металлическую дверь прямо по коридору, направо к выходу.",
+      "buffet": "Вниз на 2 этажа, прямо и вниз по лестнице, по длинному коридору, 5 ступеней вверх, направо в дверь, справа зал буфета.",
+      "main_stage": "Вниз на один этаж, налево на сцену.",
+      "small_stage": "Вниз на 2 этажа, через дверь в холл, направо, вниз по лестнице, по коридору до конца, направо, вверх на 2 этажа.",
+      "admin": "По лестничной клетке подняться на 1 этаж выше (на 3 этаж)."
+    },
+    "admin": {
+      "entrance": "Вниз на 3 этажа, через металлическую дверь со стеклом направо по коридору, направо к выходу.",
+      "buffet": "Вниз на 3 этажа, через дверь направо, прямо по коридору, налево вниз по лестнице, по длинному коридору, 5 ступеней вверх, направо.",
+      "main_stage": "Вниз на 3 этажа, через дверь в холл, направо до указателя, вверх на 1 этаж, налево на сцену.",
+      "small_stage": "Вниз на 3 этажа, через дверь по коридору, налево, вниз по лестнице, по коридору до конца, направо, вверх на 2 этажа.",
+      "dressing_rooms": "Через третий этаж пройти мимо кабинетов до лестничной клетки, спуститься на один этаж."
+    }
   };
 
   const fromEl=document.getElementById("from");
@@ -517,94 +524,167 @@ textarea{
     toastMsg.timer=setTimeout(()=>toast.classList.remove("show"),2600);
   }
 
-  function genericRoute(from,to){
-    return [
-      [locations[from].name,`Начните движение от пункта «${locations[from].name}».`,"начало маршрута"],
-      ["Ориентир","Следуйте по указателям ATLAS к следующей точке маршрута.","ориентир"],
-      [locations[to].name,`Следуйте указателям до пункта «${locations[to].name}». Вы на месте.`,"назначение"]
-    ];
+  function matchStepPhoto(stepText, startKey, targetKey) {
+    const t = stepText.toLowerCase();
+    if (startKey === 'buffet' && targetKey === 'admin') {
+      if (t.includes("металлическ") || t.includes("стеклянн")) return "point_metal_glass_door.jpg";
+      if (t.includes("3 этаж") || t.includes("администраци")) return "loc_admin.jpg";
+      return null;
+    }
+    if (t.includes("зал буфета") || t.includes("буфет") || t.includes("двери буфета")) return "loc_buffet.jpg";
+    if (t.includes("основную сцену") || t.includes("на сцену") || t.includes("основной сцены")) return "loc_main_stage.jpg";
+    if (t.includes("малая сцена") || t.includes("малому залу") || t.includes("малой сцене")) return "loc_small_stage.jpg";
+    if (t.includes("гримерных") || t.includes("гримёрный") || t.includes("гримерки")) return "loc_dressing_rooms.jpg";
+    if (t.includes("администраци")) return "loc_admin.jpg";
+    if (t.includes("выход") || t.includes("служебного входа") || t.includes("входа")) return "loc_entrance.jpg";
+    if (t.includes("указател") || t.includes("проход к гримёрным")) return "point_sign_dressing.jpg";
+    if (t.includes("металлическ") || t.includes("стеклянн")) return "point_metal_glass_door.jpg";
+    if (t.includes("5 ступеней вверх") && (startKey === 'entrance' || targetKey === 'buffet')) return "point_buffet_stairs_5.jpg";
+    if (t.includes("длинному коридору") || t.includes("длинный коридор")) return "point_long_corridor.jpg";
+    if (t.includes("вниз по лестнице")) return "point_stairs_corridor_down.jpg";
+    if (t.includes("вверх на 3 этаж") || t.includes("вниз на 3 этажа")) return "point_admin_stairs.jpg";
+    return null;
   }
 
-  function buildRoute(){
-    const from=fromEl.value, to=toEl.value;
-    if(from===to){
-      activeSteps=[[locations[from].name,"Вы уже находитесь в выбранном пункте назначения.","вы на месте"]];
-    } else {
-      activeSteps=routes[`${from}>${to}`] || genericRoute(from,to);
+  function buildRoute() {
+    stopAudio();
+    const fromKey = fromEl.value;
+    const toKey = toEl.value;
+
+    if (fromKey === toKey) {
+      panel.classList.add("active");
+      document.getElementById("routeTitle").innerHTML = `${locations[fromKey].name} <span>·</span> вы на месте`;
+      document.getElementById("routeTime").textContent = "сейчас";
+      document.getElementById("sideFrom").textContent = locations[fromKey].name;
+      document.getElementById("sideFromFloor").textContent = locations[fromKey].floor;
+      document.getElementById("sideTo").textContent = locations[fromKey].name;
+      document.getElementById("sideToFloor").textContent = locations[fromKey].floor;
+      document.getElementById("floorBadge").textContent = locations[fromKey].floor;
+      document.getElementById("floorArrow").textContent = "→";
+      activeSteps = [[locations[fromKey].name, "Вы находитесь в выбранной локации.", "вы уже здесь"]];
+      currentStep = 0;
+      renderSteps();
+      panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
     }
-    currentStep=0;
 
-    document.getElementById("routeTitle").innerHTML =
-      `${locations[from].name.toUpperCase()} <span>→</span> ${locations[to].name.toUpperCase()}`;
-    document.getElementById("routeTime").textContent =
-      from===to ? "сейчас" : `≈ ${Math.max(1,activeSteps.length-1)} мин`;
+    const a = locations[fromKey];
+    const b = locations[toKey];
 
-    document.getElementById("sideFrom").textContent=locations[from].name;
-    document.getElementById("sideFromFloor").textContent=locations[from].floor;
-    document.getElementById("sideTo").textContent=locations[to].name;
-    document.getElementById("sideToFloor").textContent=locations[to].floor;
+    document.getElementById("routeTitle").innerHTML = `${a.name.toUpperCase()} <span>→</span> ${b.name.toUpperCase()}`;
+    document.getElementById("routeTime").textContent = "маршрут готов";
+    document.getElementById("sideFrom").textContent = a.name;
+    document.getElementById("sideFromFloor").textContent = a.floor;
+    document.getElementById("sideTo").textContent = b.name;
+    document.getElementById("sideToFloor").textContent = b.floor;
 
-    const differentFloor=locations[from].floor!==locations[to].floor;
-    document.getElementById("floorBadge").textContent =
-      differentFloor ? `${locations[from].floor} → ${locations[to].floor}` : locations[to].floor;
-    document.getElementById("floorArrow").textContent =
-      differentFloor ? (locations[to].floor.includes("Цоколь") ? "↓" : "↑") : "→";
+    const differentFloor = a.floor !== b.floor;
+    document.getElementById("floorBadge").textContent = differentFloor ? `${a.floor} → ${b.floor}` : a.floor;
+    document.getElementById("floorArrow").textContent = differentFloor ? (b.floor.includes("−1") ? "↓" : "↑") : "→";
+
+    const rawRoute = matrix[fromKey] && matrix[fromKey][toKey] ? matrix[fromKey][toKey] : "";
+    const steps = rawRoute.split(/,\s+|\.\s+/).filter(s => s.trim().length > 0);
+
+    activeSteps = steps.map(step => [step.trim().replace(/^./, s => s.toUpperCase()), step.trim(), ""]);
+    currentStep = 0;
+
+    const list = document.getElementById("stepList");
+    list.innerHTML = steps.map((step, idx) => {
+      const formatted = step.trim().replace(/^./, str => str.toUpperCase());
+      const photoName = matchStepPhoto(step, fromKey, toKey);
+      const photoHtml = photoName
+        ? `<img src="img/${photoName}" class="route-photo" onerror="this.style.display='none'" alt="Ориентир">`
+        : "";
+      return `<div class="step">
+        <div class="step-no">${String(idx + 1).padStart(2,"0")}</div>
+        <div>
+          <div class="step-main">${formatted}.</div>
+          ${photoHtml}
+        </div>
+      </div>`;
+    }).join("");
 
     renderSteps();
     panel.classList.add("active");
-    panel.scrollIntoView({behavior:"smooth",block:"start"});
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function renderSteps(){
-    const list=document.getElementById("stepList");
-    list.innerHTML=activeSteps.map((s,i)=>`
-      <div class="step ${i<currentStep?'done':''} ${i===currentStep?'active':''}">
-        <div class="step-no">${String(i+1).padStart(2,"0")}</div>
-        <div>
-          <div class="step-main">${s[0]}</div>
-          <div class="step-sub">${s[1]}</div>
-        </div>
-      </div>`).join("");
-
-    const s=activeSteps[currentStep] || activeSteps[activeSteps.length-1];
-    document.getElementById("currentText").textContent=s[0];
-    document.getElementById("currentDetail").textContent=s[1];
-    document.getElementById("nextBtn").textContent =
-      currentStep < activeSteps.length-1 ? "Следующая подсказка" : "Маршрут завершён";
-  }
-
-  document.getElementById("buildRoute").addEventListener("click",buildRoute);
-
-  document.querySelectorAll(".quick-btn").forEach(btn=>{
-    btn.addEventListener("click",()=>{
-      toEl.value=btn.dataset.dest;
-      buildRoute();
+  function renderSteps() {
+    const list = document.getElementById("stepList");
+    [...list.querySelectorAll(".step")].forEach((el, i) => {
+      el.classList.toggle("done", i < currentStep);
+      el.classList.toggle("active", i === currentStep);
     });
-  });
 
-  document.getElementById("nextBtn").addEventListener("click",()=>{
-    if(currentStep < activeSteps.length-1){
-      currentStep++;
-      renderSteps();
-    } else {
-      toastMsg("Вы прибыли в пункт назначения.");
+    const s = activeSteps[currentStep];
+    if (s) {
+      document.getElementById("currentText").textContent = s[0];
+      document.getElementById("currentDetail").textContent = s[1];
     }
-  });
+    document.getElementById("nextBtn").textContent =
+      currentStep < activeSteps.length - 1 ? "Следующая подсказка" : "Маршрут завершён";
+  }
 
-  const voiceBtn=document.getElementById("voiceBtn");
-  voiceBtn.addEventListener("click",()=>{
-    if(!("speechSynthesis" in window)){
-      toastMsg("Голосовые подсказки недоступны в этом браузере.");
+  let currentAudio = null;
+
+  function stopAudio() {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      currentAudio = null;
+    }
+    voiceBtn.classList.remove("speaking");
+    voiceBtn.textContent = "Слушать аудиоинструкцию";
+  }
+
+  voiceBtn.addEventListener("click", () => {
+    if (currentAudio && !currentAudio.paused) {
+      currentAudio.pause();
+      voiceBtn.classList.remove("speaking");
+      voiceBtn.textContent = "Продолжить";
       return;
     }
-    const text=activeSteps.map(s=>`${s[0]}. ${s[1]}`).join(" ");
-    speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(text);
-    u.lang="ru-RU"; u.rate=.9; u.pitch=.96;
-    u.onstart=()=>{voiceBtn.classList.add("speaking");voiceBtn.textContent="Воспроизведение маршрута"};
-    u.onend=()=>{voiceBtn.classList.remove("speaking");voiceBtn.textContent="Воспроизвести маршрут"};
-    speechSynthesis.speak(u);
+
+    if (currentAudio && currentAudio.paused) {
+      currentAudio.play().then(() => {
+        voiceBtn.classList.add("speaking");
+        voiceBtn.textContent = "Пауза";
+      }).catch(() => stopAudio());
+      return;
+    }
+
+    const fromKey = fromEl.value;
+    const toKey = toEl.value;
+    const base = `${fromKey}_${toKey}`;
+    const candidates = [
+      `audio/${base}.mp3.mp3`,
+      `audio/${base}.mp3`,
+      `${base}.mp3.mp3`,
+      `${base}.mp3`
+    ];
+    tryPlayAudioFile(candidates, 0);
   });
+
+  function tryPlayAudioFile(candidates, idx) {
+    if (idx >= candidates.length) {
+      showToast("Аудиофайл для этого маршрута не найден.");
+      stopAudio();
+      return;
+    }
+
+    const audio = new Audio(candidates[idx]);
+    currentAudio = audio;
+
+    audio.oncanplay = () => {
+      audio.play().then(() => {
+        voiceBtn.classList.add("speaking");
+        voiceBtn.textContent = "Пауза";
+      }).catch(() => stopAudio());
+    };
+
+    audio.onended = () => stopAudio();
+    audio.onerror = () => tryPlayAudioFile(candidates, idx + 1);
+  }
 
   const modal=document.getElementById("modal");
   function closeModal(){modal.classList.remove("show")}
