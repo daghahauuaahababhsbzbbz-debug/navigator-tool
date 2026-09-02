@@ -163,7 +163,7 @@ select:focus{border-color:var(--line-gold)}
 .voice{
   width:100%;height:52px;margin-top:18px;border:1px solid rgba(255,255,255,.12);
   background:transparent;color:var(--cream);text-transform:uppercase;
-  letter-spacing:.1em;font-size:10px
+  letter-spacing:.1em;font-size:10px;transition:.2s
 }
 .voice:hover,.voice.speaking{border-color:var(--gold);color:var(--gold-light)}
 .step-list{margin-top:28px}
@@ -174,16 +174,15 @@ select:focus{border-color:var(--line-gold)}
 .step:first-child{border-top:0}
 .step-no{font:500 14px "Courier New",monospace;color:var(--gold)}
 .step-main{font-size:14px;color:var(--cream);line-height:1.5}
-.step-sub{margin-top:5px;font-size:11px;color:var(--muted);line-height:1.5}
-.step.done .step-main{color:#aaa}
+.step.done .step-main{color:#686a6e}
 .step.active .step-no{font-weight:bold}
-.step.active .step-main{font-weight:700}
-.route-photo{display:block;max-width:220px;width:100%;height:auto;margin-top:12px;border:1px solid var(--line);background:#0b0d0f}
+.step.active .step-main{font-weight:700;color:var(--gold-light)}
+.route-photo{display:block;max-width:280px;width:100%;height:auto;margin-top:12px;border:1px solid var(--line);background:#0b0d0f;border-radius:4px}
 
 .next{
   margin-top:20px;height:50px;border:0;border-top:1px solid var(--line-gold);
   border-bottom:1px solid var(--line-gold);background:transparent;color:var(--gold-light);
-  width:100%;text-transform:uppercase;letter-spacing:.1em;font-size:10px
+  width:100%;text-transform:uppercase;letter-spacing:.1em;font-size:10px;transition:.2s
 }
 .next:hover{background:rgba(214,168,95,.05)}
 
@@ -215,15 +214,15 @@ select:focus{border-color:var(--line-gold)}
 .contact-phone{font:12px "Courier New",monospace;color:var(--muted);margin-top:6px}
 .call{
   border:1px solid rgba(214,168,95,.35);color:var(--gold-light);background:transparent;
-  text-decoration:none;padding:12px 16px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap
+  text-decoration:none;padding:12px 16px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;transition:.2s
 }
-.call:hover{background:rgba(214,168,95,.07)}
+.call:hover{background:rgba(214,168,95,.07);border-color:var(--gold)}
 .report-area{display:flex;flex-direction:column;justify-content:space-between}
 .report-title{font:600 29px Georgia,serif;color:var(--cream);margin:16px 0 12px}
 .report-text{max-width:500px;color:var(--muted);font-size:12px;line-height:1.7}
 .report{
   align-self:flex-start;margin-top:30px;border:0;border-bottom:1px solid rgba(214,168,95,.45);
-  padding:8px 0;background:transparent;color:#b7a58b;font-size:10px;letter-spacing:.12em;text-transform:uppercase
+  padding:8px 0;background:transparent;color:#b7a58b;font-size:10px;letter-spacing:.12em;text-transform:uppercase;transition:.2s
 }
 .report:hover{color:var(--gold-light);border-color:var(--gold)}
 
@@ -233,20 +232,23 @@ select:focus{border-color:var(--line-gold)}
 }
 .footer b{color:var(--gold);font-family:Georgia,serif;letter-spacing:.2em}
 
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);align-items:center;justify-content:center;padding:20px;z-index:20}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;z-index:20}
 .modal.show{display:flex}
 .modal-box{width:min(560px,100%);background:#111316;border:1px solid var(--line-gold);padding:30px}
 .modal-head{display:flex;justify-content:space-between;align-items:start}
-.modal-title{font:600 30px Georgia,serif;color:var(--cream)}
+.modal-title{font:600 26px Georgia,serif;color:var(--cream)}
 .close{border:0;background:transparent;color:var(--muted);font-size:26px}
-.modal p{color:var(--muted);font-size:12px;line-height:1.6}
+.modal p{color:var(--muted);font-size:12px;line-height:1.6;margin-top:10px}
 textarea{
-  width:100%;min-height:150px;resize:vertical;background:#0b0d0f;border:1px solid var(--line);
-  color:var(--cream);padding:15px;outline:none
+  width:100%;min-height:130px;resize:vertical;background:#0b0d0f;border:1px solid var(--line);
+  color:var(--cream);padding:15px;outline:none;margin-top:10px
 }
 .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:15px}
-.cancel,.send{height:46px;padding:0 17px;border:1px solid var(--line);background:transparent;color:var(--cream);font-size:10px;text-transform:uppercase;letter-spacing:.1em}
+.cancel,.send{height:46px;padding:0 17px;border:1px solid var(--line);background:transparent;color:var(--cream);font-size:10px;text-transform:uppercase;letter-spacing:.1em;transition:.2s}
 .send{border-color:var(--gold);color:var(--gold-light)}
+.send:hover{background:rgba(214,168,95,.08)}
+.cancel:hover{background:rgba(255,255,255,.04)}
+
 .toast{
   position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;
   background:#17191c;border:1px solid var(--line-gold);padding:14px 20px;color:var(--cream);
@@ -268,7 +270,7 @@ textarea{
   .brand-sub{display:none}
   .status{font-size:8px}
   .hero-copy{padding:52px 24px 44px}
-  h1{font-size:70px}
+  h1{font-size:64px}
   .route-builder{padding:30px 24px}
   .quick{padding:25px 20px}
   .quick-grid{grid-template-columns:1fr 1fr}
@@ -289,15 +291,15 @@ textarea{
       <div class="brand-sub">Театральный навигатор</div>
     </div>
   </div>
-  <div class="status"><span class="status-dot"></span> Система активна</div>
+  <div class="status"><span class="status-dot"></span> Система активна · офлайн</div>
 </header>
 
 <section class="hero">
   <div class="hero-copy">
     <div class="eyebrow">Ориентирование по площадке</div>
     <h1>Найдите<br><span>нужное место.</span></h1>
-    <p>Выберите, где вы сейчас находитесь, и укажите пункт назначения. ATLAS покажет короткий последовательный маршрут без лишней информации.</p>
-    <div class="hero-note">Быстрое ориентирование для гостей, организаторов и технических служб.</div>
+    <p>Выберите, где вы сейчас находитесь, и укажите пункт назначения. ATLAS покажет короткий последовательный маршрут с ориентирами.</p>
+    <div class="hero-note">Быстрое ориентирование для гостей, организаторов и технических служб фестиваля «Атлас».</div>
   </div>
 
   <div class="route-builder">
@@ -341,12 +343,12 @@ textarea{
     <div class="section-kicker">быстрый выбор</div>
   </div>
   <div class="quick-grid">
-    <button class="quick-btn" data-dest="main_stage"><span><span class="quick-name">Основная сцена</span><span class="quick-meta">сценическая зона</span></span><span class="quick-arrow"></span></button>
+    <button class="quick-btn" data-dest="main_stage"><span><span class="quick-name">Основная сцена</span><span class="quick-meta">1 этаж · зал</span></span><span class="quick-arrow"></span></button>
     <button class="quick-btn" data-dest="buffet"><span><span class="quick-name">Буфет</span><span class="quick-meta">−1 этаж · зона питания</span></span><span class="quick-arrow"></span></button>
     <button class="quick-btn" data-dest="small_stage"><span><span class="quick-name">Малая сцена</span><span class="quick-meta">2 этаж</span></span><span class="quick-arrow"></span></button>
-    <button class="quick-btn" data-dest="dressing_rooms"><span><span class="quick-name">Гримёрный блок</span><span class="quick-meta">2 этаж</span></span><span class="quick-arrow"></span></button>
+    <button class="quick-btn" data-dest="dressing_rooms"><span><span class="quick-name">Гримёрный блок</span><span class="quick-meta">2 этаж · 4 блока</span></span><span class="quick-arrow"></span></button>
     <button class="quick-btn" data-dest="admin"><span><span class="quick-name">Администрация</span><span class="quick-meta">3 этаж</span></span><span class="quick-arrow"></span></button>
-    <button class="quick-btn" data-dest="entrance"><span><span class="quick-name">Служебный вход</span><span class="quick-meta">−1 этаж</span></span><span class="quick-arrow"></span></button>
+    <button class="quick-btn" data-dest="entrance"><span><span class="quick-name">Служебный вход</span><span class="quick-meta">−1 этаж · КПП</span></span><span class="quick-arrow"></span></button>
   </div>
 </section>
 
@@ -365,7 +367,7 @@ textarea{
   <div class="route-body">
     <div class="steps">
       <div class="current">
-        <div class="current-label">Первая подсказка</div>
+        <div class="current-label">Текущий шаг</div>
         <div class="current-text" id="currentText">—</div>
         <div class="current-detail" id="currentDetail">—</div>
         <button class="voice" id="voiceBtn">Воспроизвести маршрут</button>
@@ -387,7 +389,7 @@ textarea{
         <div class="side-note" id="sideToFloor">—</div>
       </div>
       <div class="side-block">
-        <div class="side-label">Переход</div>
+        <div class="side-label">Переход между этажами</div>
         <div class="floor-badge" id="floorBadge">—</div>
         <div class="arrow-large" id="floorArrow" aria-hidden="true">→</div>
       </div>
@@ -411,7 +413,7 @@ textarea{
 
     <div class="contact">
       <div>
-        <div class="contact-role">Технический директор</div>
+        <div class="contact-role">Технический директор («Атлас»)</div>
         <div class="contact-name">Руслан</div>
         <div class="contact-phone">+7 902 876-57-92</div>
       </div>
@@ -423,15 +425,15 @@ textarea{
     <div>
       <div class="section-kicker">Актуальность маршрутов</div>
       <div class="report-title">Маршрут изменился?</div>
-      <div class="report-text">Если лестница, проход или помещение временно недоступны, сообщите об этом ответственному за навигацию.</div>
+      <div class="report-text">Если лестница, проход или помещение временно закрыты, отправьте оперативное сообщение техническому директору площадки.</div>
     </div>
-    <button class="report" id="reportBtn">Сообщить о неточности маршрута</button>
+    <button class="report" id="reportBtn">⚠️ Сообщить о неточности маршрута</button>
   </div>
 </section>
 
 <footer class="footer">
   <div><b>ATLAS</b> · театральный навигатор</div>
-  <div>Система ориентирования · версия 2.1</div>
+  <div>Фестиваль театральной России · версия 2.4</div>
 </footer>
 </div>
 
@@ -441,11 +443,11 @@ textarea{
       <div class="modal-title">Сообщить о неточности</div>
       <button class="close" id="closeModal" aria-label="Закрыть">×</button>
     </div>
-    <p>Опишите, что именно не совпадает с маршрутом.</p>
-    <textarea id="reportText" placeholder="Например: проход временно закрыт..."></textarea>
+    <p id="modalRouteInfo">Маршрут: —</p>
+    <textarea id="reportText" placeholder="Например: служебная дверь перекрыта на ремонт..."></textarea>
     <div class="modal-actions">
       <button class="cancel" id="cancelModal">Отмена</button>
-      <button class="send" id="sendReport">Отправить сообщение</button>
+      <button class="send" id="sendReport">Отправить SMS Руслану</button>
     </div>
   </div>
 </div>
@@ -453,6 +455,13 @@ textarea{
 
 <script>
 (() => {
+  // Регистрация PWA Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+
   const locations = {
     entrance:       { name: "Служебный вход", floor: "−1 этаж" },
     buffet:         { name: "Буфет",          floor: "−1 этаж" },
@@ -462,10 +471,6 @@ textarea{
     admin:          { name: "Администрация",  floor: "3 этаж" }
   };
 
-  /*
-    Маршруты без карты: здесь хранятся именно текстовые инструкции.
-    Позже их можно заменить на точные данные после проверки проходов на площадке.
-  */
   const matrix = {
     "entrance": {
       "buffet": "Вперёд, направо, налево и вниз по лестнице, по длинному коридору, 5 ступеней вверх, направо в дверь, справа зал буфета.",
@@ -511,17 +516,21 @@ textarea{
     }
   };
 
-  const fromEl=document.getElementById("from");
-  const toEl=document.getElementById("to");
-  const panel=document.getElementById("routePanel");
-  const toast=document.getElementById("toast");
-  let activeSteps=[];
-  let currentStep=0;
+  const fromEl = document.getElementById("from");
+  const toEl = document.getElementById("to");
+  const panel = document.getElementById("routePanel");
+  const toast = document.getElementById("toast");
+  const voiceBtn = document.getElementById("voiceBtn");
 
-  function toastMsg(t){
-    toast.textContent=t; toast.classList.add("show");
+  let activeSteps = [];
+  let currentStep = 0;
+  let currentAudio = null;
+
+  function toastMsg(t) {
+    toast.textContent = t; 
+    toast.classList.add("show");
     clearTimeout(toastMsg.timer);
-    toastMsg.timer=setTimeout(()=>toast.classList.remove("show"),2600);
+    toastMsg.timer = setTimeout(() => toast.classList.remove("show"), 2600);
   }
 
   function matchStepPhoto(stepText, startKey, targetKey) {
@@ -553,7 +562,7 @@ textarea{
 
     if (fromKey === toKey) {
       panel.classList.add("active");
-      document.getElementById("routeTitle").innerHTML = `${locations[fromKey].name} <span>·</span> вы на месте`;
+      document.getElementById("routeTitle").innerHTML = `${locations[fromKey].name.toUpperCase()} <span>·</span> ВЫ НА МЕСТЕ`;
       document.getElementById("routeTime").textContent = "сейчас";
       document.getElementById("sideFrom").textContent = locations[fromKey].name;
       document.getElementById("sideFromFloor").textContent = locations[fromKey].floor;
@@ -561,8 +570,9 @@ textarea{
       document.getElementById("sideToFloor").textContent = locations[fromKey].floor;
       document.getElementById("floorBadge").textContent = locations[fromKey].floor;
       document.getElementById("floorArrow").textContent = "→";
-      activeSteps = [[locations[fromKey].name, "Вы находитесь в выбранной локации.", "вы уже здесь"]];
+      activeSteps = [[locations[fromKey].name, "Вы уже находитесь в выбранной локации.", ""]];
       currentStep = 0;
+      document.getElementById("stepList").innerHTML = "";
       renderSteps();
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
@@ -572,7 +582,7 @@ textarea{
     const b = locations[toKey];
 
     document.getElementById("routeTitle").innerHTML = `${a.name.toUpperCase()} <span>→</span> ${b.name.toUpperCase()}`;
-    document.getElementById("routeTime").textContent = "маршрут готов";
+    document.getElementById("routeTime").textContent = "≈ 1.5 мин";
     document.getElementById("sideFrom").textContent = a.name;
     document.getElementById("sideFromFloor").textContent = a.floor;
     document.getElementById("sideTo").textContent = b.name;
@@ -595,7 +605,7 @@ textarea{
       const photoHtml = photoName
         ? `<img src="img/${photoName}" class="route-photo" onerror="this.style.display='none'" alt="Ориентир">`
         : "";
-      return `<div class="step">
+      return `<div class="step" data-index="${idx}">
         <div class="step-no">${String(idx + 1).padStart(2,"0")}</div>
         <div>
           <div class="step-main">${formatted}.</div>
@@ -618,15 +628,25 @@ textarea{
 
     const s = activeSteps[currentStep];
     if (s) {
-      document.getElementById("currentText").textContent = s[0];
-      document.getElementById("currentDetail").textContent = s[1];
+      document.getElementById("currentText").textContent = s[0] + ".";
+      document.getElementById("currentDetail").textContent = `Шаг ${currentStep + 1} из ${activeSteps.length}. Следуйте указаниям.`;
     }
     document.getElementById("nextBtn").textContent =
-      currentStep < activeSteps.length - 1 ? "Следующая подсказка" : "Маршрут завершён";
+      currentStep < activeSteps.length - 1 ? "Следующая подсказка →" : "Маршрут завершён";
   }
 
-  let currentAudio = null;
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    if (currentStep < activeSteps.length - 1) {
+      currentStep++;
+      renderSteps();
+      const activeEl = document.querySelector(`.step[data-index="${currentStep}"]`);
+      if (activeEl) activeEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } else {
+      toastMsg("Вы дошли до конечной точки маршрута.");
+    }
+  });
 
+  // Воспроизведение реальных MP3-файлов
   function stopAudio() {
     if (currentAudio) {
       currentAudio.pause();
@@ -634,7 +654,7 @@ textarea{
       currentAudio = null;
     }
     voiceBtn.classList.remove("speaking");
-    voiceBtn.textContent = "Слушать аудиоинструкцию";
+    voiceBtn.textContent = "Воспроизвести маршрут";
   }
 
   voiceBtn.addEventListener("click", () => {
@@ -667,7 +687,7 @@ textarea{
 
   function tryPlayAudioFile(candidates, idx) {
     if (idx >= candidates.length) {
-      showToast("Аудиофайл для этого маршрута не найден.");
+      toastMsg("Аудиофайл для этого маршрута не найден.");
       stopAudio();
       return;
     }
@@ -686,22 +706,51 @@ textarea{
     audio.onerror = () => tryPlayAudioFile(candidates, idx + 1);
   }
 
-  const modal=document.getElementById("modal");
-  function closeModal(){modal.classList.remove("show")}
-  document.getElementById("reportBtn").addEventListener("click",()=>modal.classList.add("show"));
-  document.getElementById("closeModal").addEventListener("click",closeModal);
-  document.getElementById("cancelModal").addEventListener("click",closeModal);
-  modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});
-  document.getElementById("sendReport").addEventListener("click",()=>{
-    const text=document.getElementById("reportText").value.trim();
-    if(!text){toastMsg("Опишите, пожалуйста, неточность.");return}
-    closeModal();
-    document.getElementById("reportText").value="";
-    toastMsg("Сообщение подготовлено.");
+  // Репорт ошибки в SMS Руслану (+7 902 876-57-92)
+  const modal = document.getElementById("modal");
+  function closeModal() { modal.classList.remove("show"); }
+
+  document.getElementById("reportBtn").addEventListener("click", () => {
+    const fromName = locations[fromEl.value].name;
+    const toName = locations[toEl.value].name;
+    document.getElementById("modalRouteInfo").textContent = `Маршрут: ${fromName} → ${toName}`;
+    modal.classList.add("show");
   });
 
-  const params=new URLSearchParams(location.search);
-  if(locations[params.get("from")]) fromEl.value=params.get("from");
+  document.getElementById("closeModal").addEventListener("click", closeModal);
+  document.getElementById("cancelModal").addEventListener("click", closeModal);
+  modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+
+  document.getElementById("sendReport").addEventListener("click", () => {
+    const text = document.getElementById("reportText").value.trim();
+    if (!text) {
+      toastMsg("Опишите, пожалуйста, неточность.");
+      return;
+    }
+    const fromName = locations[fromEl.value].name;
+    const toName = locations[toEl.value].name;
+    const sms = `Добрый день, Руслан! Неточность в навигаторе (${fromName} → ${toName}): ${text}`;
+    closeModal();
+    document.getElementById("reportText").value = "";
+    window.location.href = `sms:+79028765792?body=${encodeURIComponent(sms)}`;
+  });
+
+  // Быстрый выбор
+  document.querySelectorAll(".quick-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      toEl.value = btn.dataset.dest;
+      buildRoute();
+    });
+  });
+
+  document.getElementById("buildRoute").addEventListener("click", buildRoute);
+  fromEl.addEventListener("change", buildRoute);
+  toEl.addEventListener("change", buildRoute);
+
+  const params = new URLSearchParams(location.search);
+  if (locations[params.get("from")]) {
+    fromEl.value = params.get("from");
+  }
 })();
 </script>
 </body>
