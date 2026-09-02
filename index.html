@@ -10,6 +10,7 @@
 :root{
   --bg:#090a0c;
   --panel:#121519;
+  --panel-card:rgba(18,21,25,.86);
   --line:rgba(235,231,220,.11);
   --line2:rgba(235,231,220,.18);
   --text:#f1eee6;
@@ -39,7 +40,7 @@ button{cursor:pointer}
 a{color:inherit;text-decoration:none}
 ::selection{background:rgba(211,167,96,.25)}
 
-.page{width:min(1180px,calc(100% - 36px));margin:0 auto;padding:22px 0 46px}
+.page{width:min(920px,calc(100% - 36px));margin:0 auto;padding:22px 0 46px}
 .topbar{
   height:64px;display:flex;align-items:center;justify-content:space-between;
   border-bottom:1px solid var(--line);margin-bottom:34px;
@@ -56,15 +57,15 @@ a{color:inherit;text-decoration:none}
 .status{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
 .status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 16px rgba(168,185,150,.65)}
 
-.hero{display:grid;grid-template-columns:1.08fr .92fr;gap:22px;margin-bottom:22px}
-.hero-copy{padding:28px 4px 16px}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;margin-bottom:28px}
+.hero-copy{padding:20px 4px 16px}
 .eyebrow{font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:15px}
 h1{
   font-family:Georgia,"Times New Roman",serif;font-weight:400;line-height:.98;
-  font-size:clamp(44px,7vw,78px);letter-spacing:-.045em;margin:0 0 20px;
+  font-size:clamp(42px,6.5vw,72px);letter-spacing:-.045em;margin:0 0 20px;
 }
 h1 span{display:block;color:#b8b6b0}
-.hero-copy p{max-width:560px;color:var(--muted);font-size:16px;line-height:1.65;margin:0}
+.hero-copy p{max-width:520px;color:var(--muted);font-size:15px;line-height:1.65;margin:0}
 .hero-note{
   margin-top:25px;padding-top:16px;border-top:1px solid var(--line);
   color:var(--muted2);font-size:11px;letter-spacing:.04em;
@@ -80,7 +81,7 @@ h1 span{display:block;color:#b8b6b0}
   background:linear-gradient(120deg,rgba(211,167,96,.08),transparent 35%,transparent 75%,rgba(255,255,255,.025));
 }
 .card-label{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:18px}
-.field{margin-bottom:13px}
+.field{margin-bottom:14px}
 .field label{display:block;color:var(--muted2);font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 7px 2px}
 .select-wrap{position:relative}
 .select-wrap:after{content:"⌄";position:absolute;right:16px;top:50%;transform:translateY(-55%);color:var(--gold);pointer-events:none;font-size:18px}
@@ -91,96 +92,82 @@ select{
 }
 select:focus{border-color:rgba(211,167,96,.55);box-shadow:0 0 0 3px rgba(211,167,96,.08)}
 .route-button{
-  width:100%;height:60px;margin-top:6px;border:1px solid var(--gold);border-radius:14px;
+  width:100%;height:58px;margin-top:8px;border:1px solid var(--gold);border-radius:14px;
   color:#101010;background:var(--gold);font-weight:700;letter-spacing:.11em;font-size:11px;
   text-transform:uppercase;transition:.2s;
 }
 .route-button:hover{background:var(--gold2);transform:translateY(-1px)}
 .route-button:active{transform:translateY(0)}
 
-.quick{padding:26px 0 8px}
-.section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:13px}
-.section-title{font-family:Georgia,serif;font-size:20px;font-weight:400}
-.section-kicker{font-size:10px;letter-spacing:.16em;color:var(--muted2);text-transform:uppercase}
-.quick-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
-.quick-btn{
-  min-height:88px;text-align:left;border:1px solid var(--line);background:rgba(18,21,25,.66);
-  border-radius:16px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;
-  color:var(--text);transition:.2s;
-}
-.quick-btn:hover{border-color:rgba(211,167,96,.42);background:rgba(211,167,96,.06);transform:translateY(-2px)}
-.quick-icon{color:var(--gold);font-size:17px}
-.quick-name{font-size:12px;line-height:1.25;font-weight:500}
-.quick-meta{font-size:9px;color:var(--muted2);margin-top:4px}
-
+/* Блок пошагового пути */
 .route-panel{
-  margin-top:22px;display:none;
-  grid-template-columns:1.2fr .8fr;gap:22px;
+  margin-top:14px;display:none;
+  border:1px solid var(--line);background:var(--panel-card);border-radius:var(--radius);overflow:hidden;
 }
-.route-panel.active{display:grid}
-.map-card,.instruction-card,.contacts,.info-card{
-  border:1px solid var(--line);background:rgba(18,21,25,.82);border-radius:var(--radius);overflow:hidden;
-}
-.map-head,.instruction-head,.contacts-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-.map-title{font-family:Georgia,serif;font-size:21px}
-.map-meta{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
-.map-wrap{position:relative;min-height:440px;background:#0c0e11;}
-.map-svg{width:100%;height:440px;display:block}
-.map-floor{fill:#15191e;stroke:#6a6d70;stroke-width:1.4}
-.map-room{fill:#101317;stroke:#34383d;stroke-width:1}
-.map-room.active-room{fill:#1b2129;stroke:var(--gold);stroke-width:1.5}
-.map-label{fill:#7d8085;font:11px Inter,Arial,sans-serif;letter-spacing:1px}
-.map-small{fill:#555a60;font:9px Inter,Arial,sans-serif;letter-spacing:0.5px}
-.route-line{fill:none;stroke:var(--gold);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:9 8;filter:drop-shadow(0 0 7px rgba(211,167,96,.45));animation:dash 1.3s linear infinite}
-@keyframes dash{to{stroke-dashoffset:-34}}
-.pin{fill:var(--gold);stroke:#0b0c0e;stroke-width:3;filter:drop-shadow(0 0 9px rgba(211,167,96,.7))}
-.pin-dest{fill:var(--green);stroke:#0b0c0e;stroke-width:3;filter:drop-shadow(0 0 9px rgba(168,185,150,.55))}
-.route-dot{fill:#f4e3c1}
-.map-legend{position:absolute;left:18px;bottom:18px;z-index:2;display:flex;gap:14px;padding:9px 11px;background:rgba(9,10,12,.82);border:1px solid var(--line);border-radius:10px;font-size:9px;color:var(--muted)}
-.legend-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;background:var(--gold)}
-.legend-dot.green{background:var(--green)}
+.route-panel.active{display:block}
+.instruction-head{padding:18px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.map-title{font-family:Georgia,serif;font-size:22px;display:flex;align-items:center;gap:12px}
+.map-meta{font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.instruction-body{padding:26px 24px}
 
-.instruction-card{display:flex;flex-direction:column;min-height:100%}
-.instruction-body{padding:22px;flex:1}
-.distance{font-family:Georgia,serif;font-size:44px;line-height:1;margin:0 0 6px}
+.meta-badges{display:flex;gap:20px;align-items:baseline;margin-bottom:12px}
+.distance{font-family:Georgia,serif;font-size:44px;line-height:1}
 .distance span{font-family:Inter,Arial,sans-serif;font-size:12px;color:var(--muted);letter-spacing:.1em}
-.arrival{color:var(--green);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
-.divider{height:1px;background:var(--line);margin:20px 0}
-.instruction-step{font-family:Georgia,serif;font-size:24px;line-height:1.22;margin-bottom:9px}
-.instruction-detail{color:var(--muted);font-size:13px;line-height:1.55}
+.arrival{color:var(--green);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.divider{height:1px;background:var(--line);margin:18px 0 24px}
 
 .voice{
-  margin-top:18px;width:100%;min-height:50px;border:1px solid var(--line2);background:#0e1013;color:var(--text);
+  width:100%;min-height:50px;border:1px solid var(--line2);background:#0e1013;color:var(--text);
   border-radius:13px;display:flex;align-items:center;justify-content:center;gap:10px;
   font-size:10px;letter-spacing:.13em;text-transform:uppercase;transition:.2s;
 }
 .voice:hover{border-color:rgba(211,167,96,.55)}
-.voice.speaking{border-color:var(--gold);color:var(--gold)}
+.voice.speaking{border-color:var(--gold);color:var(--gold);background:rgba(211,167,96,.08)}
 
-.route-list{margin-top:22px}
-.route-item{display:flex;gap:12px;position:relative;padding:0 0 16px}
+.audio-progress-wrap{
+  width:100%;height:3px;background:rgba(255,255,255,.08);margin-top:10px;border-radius:2px;overflow:hidden;
+}
+.audio-progress{
+  width:0%;height:100%;background:var(--gold);transition:width .1s linear;
+}
+
+.route-list{margin-top:28px}
+.route-item{display:flex;gap:16px;position:relative;padding:0 0 22px}
 .route-item:last-child{padding-bottom:0}
-.route-item:not(:last-child):after{content:"";position:absolute;left:5px;top:14px;width:1px;height:calc(100% - 4px);background:var(--line2)}
-.route-bullet{width:11px;height:11px;border-radius:50%;border:1px solid var(--gold);background:var(--bg);z-index:1;flex:0 0 auto;margin-top:3px}
-.route-text{flex:1}
-.route-text strong{display:block;font-size:12px;font-weight:500;line-height:1.4}
-.route-photo{width:100%;max-height:130px;object-fit:cover;border-radius:8px;margin-top:6px;border:1px solid var(--line);cursor:pointer}
+.route-item:not(:last-child):after{content:"";position:absolute;left:13px;top:26px;width:1px;height:calc(100% - 14px);background:var(--line2)}
+.route-step-num{
+  width:28px;height:28px;border-radius:50%;border:1px solid var(--gold);background:#101317;color:var(--gold);
+  font-size:11px;font-family:Georgia,serif;display:grid;place-items:center;z-index:1;flex:0 0 auto;
+}
+.route-text{flex:1;padding-top:2px}
+.route-text strong{display:block;font-size:13px;font-weight:500;line-height:1.5}
+.route-photo{
+  width:100%;max-width:440px;max-height:180px;object-fit:cover;border-radius:10px;
+  margin-top:10px;border:1px solid var(--line);cursor:pointer;display:block;
+}
 
-.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
-.contacts{padding-bottom:8px}
-.contacts-head{padding-bottom:16px}
-.contact{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:17px 20px;border-bottom:1px solid var(--line)}
+/* Нижний блок контактов и репорта */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:26px}
+.contacts,.info-card{
+  border:1px solid var(--line);background:var(--panel-card);border-radius:var(--radius);overflow:hidden;
+}
+.contacts{padding-bottom:6px}
+.contacts-head{padding:18px 20px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.section-title{font-family:Georgia,serif;font-size:20px;font-weight:400}
+.section-kicker{font-size:10px;letter-spacing:.16em;color:var(--muted2);text-transform:uppercase}
+.contact{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:16px 20px;border-bottom:1px solid var(--line)}
 .contact:last-child{border-bottom:0}
 .contact-role{font-size:9px;letter-spacing:.14em;color:var(--muted2);text-transform:uppercase;margin-bottom:5px}
 .contact-name{font-family:Georgia,serif;font-size:18px}
 .contact-phone{font-size:11px;color:var(--muted);margin-top:4px}
 .call{
-  border:1px solid var(--line2);background:transparent;color:var(--gold);height:40px;padding:0 13px;border-radius:10px;
+  border:1px solid var(--line2);background:transparent;color:var(--gold);height:40px;padding:0 14px;border-radius:10px;
   font-size:9px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;display:inline-flex;align-items:center;
 }
 .call:hover{border-color:var(--gold);background:rgba(211,167,96,.06)}
-.info-card{padding:21px}
-.info-title{font-family:Georgia,serif;font-size:21px;margin-bottom:7px}
+
+.info-card{padding:22px}
+.info-title{font-family:Georgia,serif;font-size:20px;margin-bottom:8px}
 .info-text{color:var(--muted);font-size:12px;line-height:1.65}
 .report{
   width:100%;margin-top:18px;border:1px solid rgba(201,134,125,.3);background:rgba(201,134,125,.035);
@@ -191,16 +178,17 @@ select:focus{border-color:rgba(211,167,96,.55);box-shadow:0 0 0 3px rgba(211,167
 .footer{display:flex;justify-content:space-between;gap:20px;margin-top:34px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted2);font-size:9px;letter-spacing:.08em}
 .footer b{font-family:Georgia,serif;font-size:13px;color:var(--muted);font-weight:400}
 
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+/* Модальное окно */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
 .modal-backdrop.show{display:flex}
-.modal{width:min(500px,100%);background:#121519;border:1px solid var(--line2);border-radius:22px;box-shadow:var(--shadow);padding:24px}
+.modal{width:min(480px,100%);background:#121519;border:1px solid var(--line2);border-radius:22px;box-shadow:var(--shadow);padding:24px}
 .modal-head{display:flex;justify-content:space-between;align-items:start;gap:20px}
 .modal-title{font-family:Georgia,serif;font-size:24px}
 .close{border:1px solid var(--line);background:transparent;color:var(--muted);width:36px;height:36px;border-radius:10px}
-.modal p{color:var(--muted);font-size:12px;line-height:1.6}
-textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:var(--text);border:1px solid var(--line2);border-radius:12px;padding:13px;outline:none}
-.modal-actions{display:flex;gap:9px;margin-top:12px}
-.modal-actions button{flex:1;height:48px;border-radius:11px}
+.modal p{color:var(--muted);font-size:12px;line-height:1.6;margin-top:10px}
+textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:var(--text);border:1px solid var(--line2);border-radius:12px;padding:13px;outline:none;margin-top:10px}
+.modal-actions{display:flex;gap:9px;margin-top:14px}
+.modal-actions button{flex:1;height:46px;border-radius:11px}
 .send{border:1px solid var(--gold);background:var(--gold);color:#101010;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
 .cancel{border:1px solid var(--line);background:transparent;color:var(--muted);font-size:10px;letter-spacing:.12em;text-transform:uppercase}
 
@@ -210,18 +198,16 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
 }
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
-@media (max-width:900px){
+/* Иконки локаций в заголовке пути */
+.loc-icon-svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.6;vertical-align:middle;display:inline-block}
+
+@media (max-width:860px){
   .hero{grid-template-columns:1fr}
-  .quick-grid{grid-template-columns:repeat(3,1fr)}
-  .route-panel{grid-template-columns:1fr}
   .bottom-grid{grid-template-columns:1fr}
 }
-@media (max-width:620px){
-  .page{width:min(100% - 22px,1180px);padding-top:10px}
-  .topbar{margin-bottom:22px}
+@media (max-width:560px){
+  .page{width:min(100% - 20px,920px);padding-top:8px}
   .brand-sub{display:none}
-  .quick-grid{grid-template-columns:repeat(2,1fr)}
-  .map-wrap,.map-svg{min-height:340px;height:340px}
   .footer{flex-direction:column}
 }
 </style>
@@ -243,23 +229,23 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
     <div class="hero-copy">
       <div class="eyebrow">Ориентирование по площадке</div>
       <h1>Маршруты<br><span>по театру.</span></h1>
-      <p>Служебный вход, сцены, гримёрки и буфет. Понятная навигация для участников фестиваля «Атлас».</p>
-      <div class="hero-note">Работает без интернета прямо в браузере.</div>
+      <p>Служебный вход, сцены, гримёрные комнаты и буфет. Чёткие пошаговые ориентиры для участников и гостей фестиваля «Атлас».</p>
+      <div class="hero-note">Кэшируется на устройстве и работает в залах без мобильной сети.</div>
     </div>
 
     <div class="route-card">
-      <div class="card-label">Построить маршрут</div>
+      <div class="card-label">Выбор направления</div>
 
       <div class="field">
         <label for="from">Вы сейчас здесь</label>
         <div class="select-wrap">
           <select id="from" aria-label="Текущее местоположение">
-            <option value="entrance">🚪 Служебный вход</option>
-            <option value="buffet">☕ Буфет</option>
-            <option value="main_stage">🎭 Основная сцена</option>
-            <option value="small_stage">🎬 Малая сцена</option>
-            <option value="dressing_rooms">💄 Гримёрный блок</option>
-            <option value="admin">🏛 Администрация</option>
+            <option value="entrance">Служебный вход (1 этаж)</option>
+            <option value="buffet">Буфет (Цокольный этаж)</option>
+            <option value="main_stage">Основная сцена (1 этаж)</option>
+            <option value="small_stage">Малая сцена (2 этаж)</option>
+            <option value="dressing_rooms">Гримёрный блок (2 этаж)</option>
+            <option value="admin">Администрация (3 этаж)</option>
           </select>
         </div>
       </div>
@@ -268,102 +254,41 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
         <label for="to">Куда пройти</label>
         <div class="select-wrap">
           <select id="to" aria-label="Пункт назначения">
-            <option value="main_stage">🎭 Основная сцена</option>
-            <option value="small_stage">🎬 Малая сцена</option>
-            <option value="dressing_rooms">💄 Гримёрный блок</option>
-            <option value="buffet">☕ Буфет</option>
-            <option value="admin">🏛 Администрация</option>
-            <option value="entrance">🚪 Служебный вход</option>
+            <option value="main_stage">Основная сцена (1 этаж)</option>
+            <option value="small_stage">Малая сцена (2 этаж)</option>
+            <option value="dressing_rooms">Гримёрный блок (2 этаж)</option>
+            <option value="buffet">Буфет (Цокольный этаж)</option>
+            <option value="admin">Администрация (3 этаж)</option>
+            <option value="entrance">Служебный вход (1 этаж)</option>
           </select>
         </div>
       </div>
 
-      <button class="route-button" id="buildRoute">Построить маршрут <span aria-hidden="true">→</span></button>
+      <button class="route-button" id="buildRoute">Показать маршрут <span aria-hidden="true">→</span></button>
     </div>
   </section>
 
-  <section class="quick">
-    <div class="section-head">
-      <div class="section-title">Быстрый выбор цели</div>
-      <div class="section-kicker">Ключевые локации</div>
-    </div>
-    <div class="quick-grid" id="quickGrid">
-      <!-- Наполняется динамически скриптом без текущей точки старта -->
-    </div>
-  </section>
-
+  <!-- Панель пошагового пути и аудиогида -->
   <section class="route-panel" id="routePanel" aria-live="polite">
-    <div class="map-card">
-      <div class="map-head">
-        <div>
-          <div class="map-meta">Схема здания театра</div>
-          <div class="map-title" id="mapTitle">Маршрут</div>
-        </div>
-        <div class="map-meta" id="mapFloor">План этажей</div>
-      </div>
-      <div class="map-wrap">
-        <svg class="map-svg" viewBox="0 0 760 440" role="img" aria-label="Схема театра">
-          <rect class="map-floor" x="40" y="35" width="680" height="370" rx="4"/>
-          
-          <!-- 6 утверждённых локаций -->
-          <rect id="room_entrance" class="map-room" x="65" y="60" width="195" height="150" rx="2"/>
-          <rect id="room_buffet" class="map-room" x="65" y="230" width="195" height="155" rx="2"/>
-          
-          <rect id="room_main_stage" class="map-room" x="280" y="60" width="230" height="200" rx="2"/>
-          <rect id="room_small_stage" class="map-room" x="280" y="280" width="230" height="105" rx="2"/>
-          
-          <rect id="room_dressing_rooms" class="map-room" x="530" y="60" width="165" height="170" rx="2"/>
-          <rect id="room_admin" class="map-room" x="530" y="250" width="165" height="135" rx="2"/>
-
-          <!-- Подписи зон -->
-          <text class="map-label" x="90" y="115">СЛУЖЕБНЫЙ ВХОД</text>
-          <text class="map-small" x="90" y="135">1 этаж · КПП</text>
-
-          <text class="map-label" x="90" y="295">БУФЕТ</text>
-          <text class="map-small" x="90" y="315">цоколь · кофе</text>
-
-          <text class="map-label" x="310" y="140">ОСНОВНАЯ СЦЕНА</text>
-          <text class="map-small" x="310" y="160">1-2 этаж · зал</text>
-
-          <text class="map-label" x="310" y="325">МАЛАЯ СЦЕНА</text>
-          <text class="map-small" x="310" y="345">2 этаж</text>
-
-          <text class="map-label" x="545" y="125">ГРИМЁРКИ</text>
-          <text class="map-small" x="545" y="145">2 этаж · 4 блока</text>
-
-          <text class="map-label" x="545" y="305">АДМИНИСТРАЦИЯ</text>
-          <text class="map-small" x="545" y="325">3 этаж</text>
-
-          <!-- Интерактивная траектория -->
-          <path id="routeLine" class="route-line" d="M160 135 L160 135"/>
-          <circle id="fromPin" class="pin" cx="160" cy="135" r="8"/>
-          <circle id="toPin" class="pin-dest" cx="160" cy="135" r="8"/>
-          <circle id="fromPulse" class="route-dot" cx="160" cy="135" r="3"/>
-          <circle id="toPulse" class="route-dot" cx="160" cy="135" r="3"/>
-        </svg>
-        <div class="map-legend">
-          <span><i class="legend-dot"></i>Старт</span>
-          <span><i class="legend-dot green"></i>Цель</span>
-        </div>
-      </div>
+    <div class="instruction-head">
+      <div class="map-title" id="mapTitle">Маршрут</div>
+      <div class="map-meta" id="mapFloor">1 этаж</div>
     </div>
-
-    <div class="instruction-card">
-      <div class="instruction-head">
-        <div class="map-meta">Маршрут</div>
-        <div class="map-meta" id="routeTime">≈ 1-2 мин</div>
-      </div>
-      <div class="instruction-body">
+    
+    <div class="instruction-body">
+      <div class="meta-badges">
         <div class="distance" id="distance">Шаги <span>маршрута</span></div>
         <div class="arrival" id="arrival">построен</div>
-        <div class="divider"></div>
-        <div class="instruction-step" id="instruction">Выберите пункт назначения</div>
-        <div class="instruction-detail" id="instructionDetail">Пошаговое описание перемещения по театру.</div>
-
-        <button class="voice" id="voiceBtn"><span>▶</span> Слушать аудиоинструкцию</button>
-
-        <div class="route-list" id="routeList"></div>
       </div>
+
+      <button class="voice" id="voiceBtn"><span>▶</span> Слушать аудиоинструкцию</button>
+      <div class="audio-progress-wrap">
+        <div class="audio-progress" id="audioProgress"></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="route-list" id="routeList"></div>
     </div>
   </section>
 
@@ -394,14 +319,14 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
     <div class="info-card">
       <div class="section-kicker">Служба навигации</div>
       <div class="info-title">Заметили неточность в маршруте?</div>
-      <div class="info-text">Если перекрыта лестница, закрыта служебная дверь или изменилось назначение помещений, отправьте уведомление напрямую техдиректору Руслану.</div>
-      <button class="report" id="reportBtn">⚠️ Сообщить о неточности маршрута</button>
+      <div class="info-text">Если перекрыта лестница, закрыта служебная дверь или изменилось назначение комнат, отправьте сообщение техническому директору.</div>
+      <button class="report" id="reportBtn">⚠️ Сообщить о неточности</button>
     </div>
   </section>
 
   <footer class="footer">
     <div><b>ATLAS</b> · театральный навигатор</div>
-    <div>Фестиваль театральной России · Офлайн-версия 2.2</div>
+    <div>Фестиваль театральной России · Офлайн-версия 2.3</div>
   </footer>
 </div>
 
@@ -424,24 +349,32 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
 
 <script>
 (() => {
-  // 1. PWA Service Worker
+  // PWA Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(() => {});
     });
   }
 
-  // 2. Локации и координаты на плане
-  const locations = {
-    entrance:       { name: "Служебный вход", floor: "1 этаж", icon: "🚪", x: 160, y: 135, rect: "room_entrance" },
-    buffet:         { name: "Буфет",          floor: "Цоколь", icon: "☕", x: 160, y: 305, rect: "room_buffet" },
-    main_stage:     { name: "Основная сцена", floor: "1 этаж", icon: "🎭", x: 395, y: 160, rect: "room_main_stage" },
-    small_stage:    { name: "Малая сцена",    floor: "2 этаж", icon: "🎬", x: 395, y: 330, rect: "room_small_stage" },
-    dressing_rooms: { name: "Гримёрный блок", floor: "2 этаж", icon: "💄", x: 610, y: 145, rect: "room_dressing_rooms" },
-    admin:          { name: "Администрация",  floor: "3 этаж", icon: "🏛", x: 610, y: 315, rect: "room_admin" }
+  // Векторные монохромные SVG-пиктограммы в едином строгом стиле
+  const icons = {
+    door: `<svg class="loc-icon-svg" viewBox="0 0 24 24"><path d="M4 21V4a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v17M14 12h-2M4 21h16"/></svg>`,
+    cup: `<svg class="loc-icon-svg" viewBox="0 0 24 24"><path d="M4 8h12v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8zM16 10h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2M3 21h14"/></svg>`,
+    stage: `<svg class="loc-icon-svg" viewBox="0 0 24 24"><path d="M3 6h18M5 6v12M19 6v12M2 18h20M9 6v4a3 3 0 0 0 6 0V6"/></svg>`,
+    small_stage: `<svg class="loc-icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18M9 20V9"/></svg>`,
+    mirror: `<svg class="loc-icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M12 15v6M9 19h6"/></svg>`,
+    columns: `<svg class="loc-icon-svg" viewBox="0 0 24 24"><path d="M3 20h18M4 7h16M12 3L3 7v1h18V7L12 3zM7 8v12M12 8v12M17 8v12"/></svg>`
   };
 
-  // 3. Матрица пошаговых текстовых маршрутов
+  const locations = {
+    entrance:       { name: "Служебный вход", floor: "1 этаж", icon: icons.door },
+    buffet:         { name: "Буфет",          floor: "Цоколь", icon: icons.cup },
+    main_stage:     { name: "Основная сцена", floor: "1 этаж", icon: icons.stage },
+    small_stage:    { name: "Малая сцена",    floor: "2 этаж", icon: icons.small_stage },
+    dressing_rooms: { name: "Гримёрный блок", floor: "2 этаж", icon: icons.mirror },
+    admin:          { name: "Администрация",  floor: "3 этаж", icon: icons.columns }
+  };
+
   const matrix = {
     "entrance": {
       "buffet": "Вперёд, направо, налево и вниз по лестнице, по длинному коридору, 5 ступеней вверх, направо в дверь, справа зал буфета.",
@@ -489,15 +422,10 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
 
   const fromEl = document.getElementById("from");
   const toEl = document.getElementById("to");
-  const quickGrid = document.getElementById("quickGrid");
   const panel = document.getElementById("routePanel");
-  const routeLine = document.getElementById("routeLine");
-  const fromPin = document.getElementById("fromPin");
-  const toPin = document.getElementById("toPin");
-  const fromPulse = document.getElementById("fromPulse");
-  const toPulse = document.getElementById("toPulse");
   const toast = document.getElementById("toast");
   const voiceBtn = document.getElementById("voiceBtn");
+  const audioProgress = document.getElementById("audioProgress");
 
   let currentAudio = null;
 
@@ -530,55 +458,18 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
     return null;
   }
 
-  function updateQuickGrid() {
-    quickGrid.innerHTML = "";
-    const currentFrom = fromEl.value;
-    Object.keys(locations).forEach(key => {
-      if (key !== currentFrom) {
-        const loc = locations[key];
-        const btn = document.createElement("button");
-        btn.className = "quick-btn";
-        btn.innerHTML = `
-          <span class="quick-icon">${loc.icon}</span>
-          <span>
-            <span class="quick-name">${loc.name}</span>
-            <span class="quick-meta">${loc.floor}</span>
-          </span>
-        `;
-        btn.onclick = () => {
-          toEl.value = key;
-          buildRoute();
-        };
-        quickGrid.appendChild(btn);
-      }
-    });
-  }
-
-  function pathFor(a, b) {
-    const midX = (a.x + b.x) / 2;
-    return `M ${a.x} ${a.y} L ${midX} ${a.y} L ${midX} ${b.y} L ${b.x} ${b.y}`;
-  }
-
   function buildRoute() {
     stopAudio();
     const fromKey = fromEl.value;
     const toKey = toEl.value;
 
-    document.querySelectorAll(".map-room").forEach(r => r.classList.remove("active-room"));
-
     if (fromKey === toKey) {
       panel.classList.add("active");
-      document.getElementById("mapTitle").textContent = `${locations[fromKey].name} · вы на месте`;
+      document.getElementById("mapTitle").innerHTML = `${locations[fromKey].icon} ${locations[fromKey].name} · вы на месте`;
       document.getElementById("mapFloor").textContent = locations[fromKey].floor;
       document.getElementById("distance").innerHTML = `0 <span>шагов</span>`;
-      document.getElementById("routeTime").textContent = "на месте";
       document.getElementById("arrival").textContent = "вы уже здесь";
-      document.getElementById("instruction").textContent = locations[toKey].name;
-      document.getElementById("instructionDetail").textContent = "Перемещение не требуется.";
-      routeLine.setAttribute("d", `M ${locations[fromKey].x} ${locations[fromKey].y} L ${locations[fromKey].x} ${locations[fromKey].y}`);
-      fromPin.setAttribute("cx", locations[fromKey].x); fromPin.setAttribute("cy", locations[fromKey].y);
-      toPin.setAttribute("cx", locations[toKey].x); toPin.setAttribute("cy", locations[toKey].y);
-      document.getElementById("routeList").innerHTML = "";
+      document.getElementById("routeList").innerHTML = `<div style="color:var(--muted);font-size:13px;">Вы находитесь в выбранной локации.</div>`;
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
@@ -586,29 +477,15 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
     const a = locations[fromKey];
     const b = locations[toKey];
 
-    // Подсветка комнат на карте
-    if (document.getElementById(a.rect)) document.getElementById(a.rect).classList.add("active-room");
-    if (document.getElementById(b.rect)) document.getElementById(b.rect).classList.add("active-room");
-
-    routeLine.setAttribute("d", pathFor(a, b));
-    fromPin.setAttribute("cx", a.x); fromPin.setAttribute("cy", a.y);
-    toPin.setAttribute("cx", b.x); toPin.setAttribute("cy", b.y);
-    fromPulse.setAttribute("cx", a.x); fromPulse.setAttribute("cy", a.y);
-    toPulse.setAttribute("cx", b.x); toPulse.setAttribute("cy", b.y);
-
-    document.getElementById("mapTitle").textContent = `${a.name} → ${b.name}`;
+    document.getElementById("mapTitle").innerHTML = `${a.icon} ${a.name} → ${b.icon} ${b.name}`;
     document.getElementById("mapFloor").textContent = `${a.floor} → ${b.floor}`;
-    document.getElementById("arrival").textContent = "маршрут построен";
+    document.getElementById("arrival").textContent = "маршрут готов";
 
     const rawRoute = matrix[fromKey] && matrix[fromKey][toKey] ? matrix[fromKey][toKey] : "Следуйте указателям коридора.";
     const steps = rawRoute.split(/,\s+|\.\s+/).filter(s => s.trim().length > 0);
 
     document.getElementById("distance").innerHTML = `${steps.length} <span>этапа</span>`;
-    document.getElementById("routeTime").textContent = `≈ 1.5 мин`;
-    document.getElementById("instruction").textContent = steps[0] + ".";
-    document.getElementById("instructionDetail").textContent = steps[1] ? steps[1] + "." : "Следуйте к пункту назначения.";
 
-    // Рендер пошаговых инструкций и фото
     const routeListBox = document.getElementById("routeList");
     routeListBox.innerHTML = steps.map((step, idx) => {
       const formatted = step.trim().replace(/^./, str => str.toUpperCase());
@@ -619,9 +496,9 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
       }
       return `
         <div class="route-item">
-          <div class="route-bullet"></div>
+          <div class="route-step-num">${idx + 1}</div>
           <div class="route-text">
-            <strong>${idx + 1}. ${formatted}.</strong>
+            <strong>${formatted}.</strong>
             ${photoHtml}
           </div>
         </div>
@@ -632,23 +509,30 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
     panel.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  // Аудиоинструкции (приоритет MP3 -> fallback SpeechSynthesis)
+  // Работа строго с реальными аудиофайлами MP3
   function stopAudio() {
     if (currentAudio) {
       currentAudio.pause();
       currentAudio.currentTime = 0;
       currentAudio = null;
     }
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
     voiceBtn.classList.remove("speaking");
     voiceBtn.innerHTML = "<span>▶</span> Слушать аудиоинструкцию";
+    audioProgress.style.width = "0%";
   }
 
   voiceBtn.addEventListener("click", () => {
-    if (currentAudio || voiceBtn.classList.contains("speaking")) {
-      stopAudio();
+    if (currentAudio && !currentAudio.paused) {
+      currentAudio.pause();
+      voiceBtn.classList.remove("speaking");
+      voiceBtn.innerHTML = "<span>▶</span> Продолжить";
+      return;
+    }
+
+    if (currentAudio && currentAudio.paused) {
+      currentAudio.play();
+      voiceBtn.classList.add("speaking");
+      voiceBtn.innerHTML = "<span>⏸</span> Пауза";
       return;
     }
 
@@ -658,43 +542,38 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
     const candidates = [
       `audio/${base}.mp3.mp3`,
       `audio/${base}.mp3`,
+      `${base}.mp3.mp3`,
       `${base}.mp3`
     ];
 
-    tryPlayAudioFile(candidates, 0, () => {
-      // Fallback на синтез речи, если аудиофайл отсутствует
-      const rawRoute = matrix[fromKey] && matrix[fromKey][toKey];
-      if (!rawRoute || !('speechSynthesis' in window)) {
-        showToast("Голосовая запись для этого направления готовится.");
-        return;
-      }
-      const u = new SpeechSynthesisUtterance(rawRoute);
-      u.lang = "ru-RU";
-      u.rate = 0.95;
-      u.onstart = () => {
-        voiceBtn.classList.add("speaking");
-        voiceBtn.innerHTML = "<span>⏸</span> Идет воспроизведение...";
-      };
-      u.onend = () => stopAudio();
-      window.speechSynthesis.speak(u);
-    });
+    tryPlayAudioFile(candidates, 0);
   });
 
-  function tryPlayAudioFile(candidates, idx, onFallback) {
+  function tryPlayAudioFile(candidates, idx) {
     if (idx >= candidates.length) {
-      onFallback();
+      showToast("Аудиофайл для этого маршрута не найден.");
+      stopAudio();
       return;
     }
+
     const audio = new Audio(candidates[idx]);
+    currentAudio = audio;
+
     audio.oncanplay = () => {
-      currentAudio = audio;
       audio.play().then(() => {
         voiceBtn.classList.add("speaking");
         voiceBtn.innerHTML = "<span>⏸</span> Пауза";
-      }).catch(() => onFallback());
-      audio.onended = () => stopAudio();
+      }).catch(() => stopAudio());
     };
-    audio.onerror = () => tryPlayAudioFile(candidates, idx + 1, onFallback);
+
+    audio.ontimeupdate = () => {
+      if (audio.duration) {
+        audioProgress.style.width = (audio.currentTime / audio.duration) * 100 + "%";
+      }
+    };
+
+    audio.onended = () => stopAudio();
+    audio.onerror = () => tryPlayAudioFile(candidates, idx + 1);
   }
 
   // Репорт ошибки в SMS Руслану (+7 902 876-57-92)
@@ -726,12 +605,8 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
     window.location.href = `sms:+79028765792?body=${encodeURIComponent(smsText)}`;
   });
 
-  // Инициализация
   document.getElementById("buildRoute").addEventListener("click", buildRoute);
-  fromEl.addEventListener("change", () => {
-    updateQuickGrid();
-    buildRoute();
-  });
+  fromEl.addEventListener("change", buildRoute);
   toEl.addEventListener("change", buildRoute);
 
   const params = new URLSearchParams(location.search);
@@ -739,8 +614,6 @@ textarea{width:100%;min-height:100px;resize:vertical;background:#0d0f12;color:va
   if (fromParam && locations[fromParam]) {
     fromEl.value = fromParam;
   }
-
-  updateQuickGrid();
 })();
 </script>
 </body>
