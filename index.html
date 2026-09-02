@@ -7,6 +7,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Firebase App & Services (Compat SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <style>
     :root {
       --bg-dark: #0b0d13;
@@ -53,7 +59,6 @@
       padding-bottom: 24px;
     }
 
-    /* Шапка */
     header {
       text-align: center;
       padding: 12px 0 4px;
@@ -88,7 +93,6 @@
       margin-top: 4px;
     }
 
-    /* Стеклянные карточки */
     .glass-card {
       background: var(--card-bg);
       backdrop-filter: blur(18px);
@@ -111,7 +115,7 @@
       font-weight: 600;
     }
 
-    .select-box {
+    .select-box, .input-field, .textarea-field {
       width: 100%;
       background: var(--item-bg);
       color: var(--text);
@@ -119,12 +123,19 @@
       padding: 13px 14px;
       border-radius: 10px;
       font-size: 0.95rem;
-      font-weight: 500;
       outline: none;
-      cursor: pointer;
     }
 
-    /* Плитки назначения */
+    .input-field:focus, .textarea-field:focus, .select-box:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 10px var(--primary-glow);
+    }
+
+    .textarea-field {
+      min-height: 80px;
+      resize: vertical;
+    }
+
     .grid-destinations {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -142,21 +153,12 @@
       flex-direction: column;
       align-items: center;
       gap: 6px;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.25s;
     }
 
-    button.dest-tile .icon {
-      font-size: 1.35rem;
-    }
-
-    button.dest-tile .name {
-      font-size: 0.82rem;
-      font-weight: 600;
-    }
-
-    button.dest-tile:active {
-      transform: scale(0.96);
-    }
+    button.dest-tile .icon { font-size: 1.35rem; }
+    button.dest-tile .name { font-size: 0.82rem; font-weight: 600; }
+    button.dest-tile:active { transform: scale(0.96); }
 
     button.dest-tile.active {
       background: linear-gradient(135deg, rgba(240, 195, 82, 0.2), rgba(240, 195, 82, 0.05));
@@ -164,11 +166,8 @@
       box-shadow: 0 0 16px var(--primary-glow);
     }
 
-    button.dest-tile.active .name {
-      color: var(--primary);
-    }
+    button.dest-tile.active .name { color: var(--primary); }
 
-    /* Блок аудиоплеера */
     .player-panel {
       background: rgba(0, 0, 0, 0.25);
       border: 1px solid var(--card-border);
@@ -186,25 +185,31 @@
       align-items: center;
     }
 
-    .player-btn {
+    .player-btn, .action-btn {
       background: linear-gradient(135deg, var(--primary), #caa038);
       border: none;
       color: #0c0d12;
-      padding: 8px 16px;
+      padding: 10px 18px;
       border-radius: 30px;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       box-shadow: 0 4px 12px var(--primary-glow);
       transition: transform 0.2s;
     }
 
-    .player-btn:active {
-      transform: scale(0.95);
+    .action-btn {
+      width: 100%;
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 8px;
     }
+
+    .action-btn:active, .player-btn:active { transform: scale(0.97); }
 
     .audio-bars {
       display: flex;
@@ -246,7 +251,6 @@
       transition: width 0.1s linear;
     }
 
-    /* Таймлайн маршрута */
     .timeline {
       display: flex;
       flex-direction: column;
@@ -308,11 +312,6 @@
       line-height: 1.45;
     }
 
-    .step-icon-action {
-      font-size: 1rem;
-      line-height: 1.2;
-    }
-
     .step-photo-wrap {
       position: relative;
       border-radius: 8px;
@@ -341,12 +340,8 @@
       font-size: 0.68rem;
       padding: 3px 8px;
       border-radius: 12px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
     }
 
-    /* Контакты */
     .contact-card {
       background: var(--item-bg);
       border: 1px solid var(--item-border);
@@ -385,17 +380,8 @@
       letter-spacing: 0.5px;
     }
 
-    .contact-name {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .contact-phone {
-      font-size: 0.82rem;
-      color: var(--primary);
-      text-decoration: none;
-    }
+    .contact-name { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .contact-phone { font-size: 0.82rem; color: var(--primary); text-decoration: none; }
 
     .call-btn {
       background: linear-gradient(135deg, #27ae60, #219653);
@@ -409,22 +395,36 @@
       align-items: center;
       gap: 6px;
       box-shadow: 0 3px 10px var(--call-glow);
-      transition: transform 0.15s;
     }
 
-    .call-btn:active {
-      transform: scale(0.95);
+    /* Форма обратной связи */
+    .feedback-status {
+      font-size: 0.82rem;
+      margin-top: 6px;
+      color: var(--primary);
+      text-align: center;
     }
 
-    /* Модальное окно (Lightbox) */
+    .auth-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(39, 174, 96, 0.15);
+      border: 1px solid rgba(39, 174, 96, 0.3);
+      color: #2ecc71;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
     .lightbox {
       display: none;
       position: fixed;
       z-index: 999;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       background: rgba(0, 0, 0, 0.92);
       backdrop-filter: blur(8px);
       justify-content: center;
@@ -437,7 +437,6 @@
       max-height: 85vh;
       border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     }
   </style>
 </head>
@@ -506,9 +505,7 @@
         <span class="contact-name">Оксана</span>
         <a href="tel:+79636554021" class="contact-phone">+7 963 655-40-21</a>
       </div>
-      <a href="tel:+79636554021" class="call-btn">
-        📞 Вызов
-      </a>
+      <a href="tel:+79636554021" class="call-btn">📞 Вызов</a>
     </div>
 
     <div class="contact-card">
@@ -520,19 +517,142 @@
         <span class="contact-name">Руслан</span>
         <a href="tel:+79028765792" class="contact-phone">+7 902 876-57-92</a>
       </div>
-      <a href="tel:+79028765792" class="call-btn">
-        📞 Вызов
-      </a>
+      <a href="tel:+79028765792" class="call-btn">📞 Вызов</a>
     </div>
+  </div>
+
+  <!-- Блок обратной связи с верификацией -->
+  <div class="glass-card">
+    <div class="section-label"><span>💬</span> Обратная связь о навигации:</div>
+    
+    <!-- Шаг 1: Авторизация по телефону -->
+    <div id="authSection">
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px;">
+        Для исключения анонимных сообщений подтвердите номер телефона через СМС:
+      </p>
+      
+      <div id="phoneInputBlock" style="display: flex; flex-direction: column; gap: 8px;">
+        <input type="tel" id="userPhone" class="input-field" placeholder="+7 (999) 000-00-00" value="+7">
+        <div id="recaptcha-container"></div>
+        <button class="action-btn" onclick="sendSmsCode()">Получить СМС с кодом</button>
+      </div>
+
+      <div id="codeInputBlock" style="display: none; flex-direction: column; gap: 8px; margin-top: 10px;">
+        <input type="number" id="smsCode" class="input-field" placeholder="6-значный код из СМС">
+        <button class="action-btn" onclick="verifySmsCode()">Подтвердить номер</button>
+      </div>
+    </div>
+
+    <!-- Шаг 2: Форма отзыва (после верификации) -->
+    <div id="reviewSection" style="display: none;">
+      <div class="auth-badge">
+        <span>✓ Номер подтверждён:</span>
+        <span id="verifiedPhoneText"></span>
+      </div>
+      <textarea id="feedbackText" class="textarea-field" placeholder="Опишите ваши впечатления или замечания по маршрутам..."></textarea>
+      <button class="action-btn" onclick="submitFeedback()">Отправить отзыв</button>
+    </div>
+
+    <div id="feedbackStatus" class="feedback-status"></div>
   </div>
 </div>
 
-<!-- Модальное окно зума фото -->
 <div id="lightboxModal" class="lightbox" onclick="closeLightbox()">
   <img id="lightboxImg" src="" alt="Ориентир театра">
 </div>
 
 <script>
+  // Инициализация Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDypRY_v97d9mVtdXKP_rma8rcWmOtZDtc",
+    authDomain: "theatr12.firebaseapp.com",
+    projectId: "theatr12",
+    storageBucket: "theatr12.firebasestorage.app",
+    messagingSenderId: "266445843498",
+    appId: "1:266445843498:web:4989cec997f593dedba753"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  let confirmationResult = null;
+  let currentUserPhone = null;
+
+  // Настройка невидимой капчи
+  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+    'size': 'invisible'
+  });
+
+  // Отправка СМС
+  function sendSmsCode() {
+    const phone = document.getElementById('userPhone').value.trim();
+    const status = document.getElementById('feedbackStatus');
+    
+    if (phone.length < 11) {
+      status.innerText = "Пожалуйста, введите корректный номер в формате +7...";
+      return;
+    }
+
+    status.innerText = "Отправляем СМС с проверочным кодом...";
+    auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
+      .then((res) => {
+        confirmationResult = res;
+        document.getElementById('phoneInputBlock').style.display = 'none';
+        document.getElementById('codeInputBlock').style.display = 'flex';
+        status.innerText = "СМС отправлено! Введите 6-значный код.";
+      }).catch((err) => {
+        status.innerText = "Ошибка отправки СМС: " + err.message;
+      });
+  }
+
+  // Проверка кода
+  function verifySmsCode() {
+    const code = document.getElementById('smsCode').value.trim();
+    const status = document.getElementById('feedbackStatus');
+
+    if (code.length !== 6) {
+      status.innerText = "Код должен состоять из 6 цифр";
+      return;
+    }
+
+    status.innerText = "Проверка кода...";
+    confirmationResult.confirm(code)
+      .then((res) => {
+        currentUserPhone = res.user.phoneNumber;
+        document.getElementById('authSection').style.display = 'none';
+        document.getElementById('reviewSection').style.display = 'block';
+        document.getElementById('verifiedPhoneText').innerText = currentUserPhone;
+        status.innerText = "";
+      }).catch((err) => {
+        status.innerText = "Неверный код СМС: " + err.message;
+      });
+  }
+
+  // Запись отзыва в Firestore
+  function submitFeedback() {
+    const text = document.getElementById('feedbackText').value.trim();
+    const status = document.getElementById('feedbackStatus');
+
+    if (!text) {
+      status.innerText = "Напишите хотя бы пару слов перед отправкой.";
+      return;
+    }
+
+    status.innerText = "Сохраняем отзыв...";
+    db.collection("feedbacks").add({
+      phone: currentUserPhone,
+      text: text,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+      document.getElementById('feedbackText').value = '';
+      status.innerHTML = "🎉 Спасибо! Ваш отзыв успешно сохранён.";
+    }).catch((err) => {
+      status.innerText = "Ошибка сохранения: " + err.message;
+    });
+  }
+
+  // --- Логика навигатора ---
   const locations = [
     { id: 'entrance', name: 'Служебный вход', icon: '🚪' },
     { id: 'buffet', name: 'Буфет', icon: '☕' },
@@ -600,13 +720,11 @@
 
   function matchStepPhoto(stepText, start, target) {
     const t = stepText.toLowerCase();
-
     if (start === 'buffet' && target === 'admin') {
       if (t.includes("металлическ") || t.includes("стеклянн")) return "point_metal_glass_door.jpg";
       if (t.includes("3 этаж") || t.includes("администраци")) return "loc_admin.jpg";
       return null;
     }
-
     if (t.includes("зал буфета") || t.includes("буфет") || t.includes("двери буфета")) return "loc_buffet.jpg";
     if (t.includes("основную сцену") || t.includes("на сцену") || t.includes("основной сцены")) return "loc_main_stage.jpg";
     if (t.includes("малая сцена") || t.includes("малому залу") || t.includes("малой сцене")) return "loc_small_stage.jpg";
@@ -647,7 +765,6 @@
   function renderDestinations() {
     const container = document.getElementById('destContainer');
     container.innerHTML = '';
-
     locations.forEach(loc => {
       if (loc.id !== currentStart) {
         const btn = document.createElement('button');
@@ -731,10 +848,8 @@
     document.getElementById('lightboxModal').style.display = 'none';
   }
 
-  /* Аудиоплеер */
   function setupAudio(start, target) {
     stopAudio();
-
     const base = `${start}_${target}`;
     const candidates = [
       `audio/${base}.mp3.mp3`,
@@ -742,7 +857,6 @@
       `${base}.mp3.mp3`,
       `${base}.mp3`
     ];
-
     tryLoadAudio(candidates, 0);
   }
 
@@ -751,18 +865,11 @@
       document.getElementById('playLabel').innerText = 'Нет аудио';
       return;
     }
-
     const audio = new Audio(candidates[index]);
     currentAudio = audio;
     bindAudioEvents(audio);
-
-    audio.oncanplay = () => {
-      audio.play().catch(() => resetPlayBtn());
-    };
-
-    audio.onerror = () => {
-      tryLoadAudio(candidates, index + 1);
-    };
+    audio.oncanplay = () => { audio.play().catch(() => resetPlayBtn()); };
+    audio.onerror = () => { tryLoadAudio(candidates, index + 1); };
   }
 
   function bindAudioEvents(audio) {
@@ -776,41 +883,31 @@
       label.innerText = 'Пауза';
       bars.forEach(b => b.classList.add('animating'));
     };
-
     audio.onpause = () => {
       icon.innerText = '▶';
       label.innerText = 'Слушать';
       bars.forEach(b => b.classList.remove('animating'));
     };
-
     audio.onended = () => {
       icon.innerText = '▶';
       label.innerText = 'Слушать';
       bars.forEach(b => b.classList.remove('animating'));
       progress.style.width = '0%';
     };
-
     audio.ontimeupdate = () => {
       if (audio.duration) {
-        const percent = (audio.currentTime / audio.duration) * 100;
-        progress.style.width = percent + '%';
+        progress.style.width = (audio.currentTime / audio.duration) * 100 + '%';
       }
     };
   }
 
   function toggleAudio() {
     if (!currentAudio) {
-      if (currentStart && currentTarget) {
-        setupAudio(currentStart, currentTarget);
-      }
+      if (currentStart && currentTarget) setupAudio(currentStart, currentTarget);
       return;
     }
-
-    if (currentAudio.paused) {
-      currentAudio.play().catch(err => console.error(err));
-    } else {
-      currentAudio.pause();
-    }
+    if (currentAudio.paused) currentAudio.play().catch(err => console.error(err));
+    else currentAudio.pause();
   }
 
   function stopAudio() {
@@ -827,7 +924,6 @@
     const label = document.getElementById('playLabel');
     const bars = document.querySelectorAll('.bar');
     const progress = document.getElementById('progressBar');
-    
     if (icon) icon.innerText = '▶';
     if (label) label.innerText = 'Слушать';
     if (bars) bars.forEach(b => b.classList.remove('animating'));
