@@ -7,26 +7,26 @@
   <meta name="description" content="ATLAS — система ориентирования и театральной навигации." />
   <title>ATLAS — Театральный навигатор</title>
 
-  <!-- Фирменный знак ATLAS во вкладке браузера -->
+  <!-- Фирменный знак ATLAS во вкладке (сначала прямой встроенный SVG, затем файл) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23090A0C'/%3E%3Ccircle cx='50' cy='50' r='38' fill='none' stroke='%236F5630' stroke-width='1.2' stroke-dasharray='2 2'/%3E%3Ccircle cx='50' cy='50' r='24' fill='none' stroke='%23D6A85F' stroke-width='1.2'/%3E%3Cpath d='M50 4 L54 42 L96 50 L54 58 L50 96 L46 58 L4 50 L46 42 Z' fill='%23B8863B'/%3E%3Cpath d='M50 4 L64 78 L50 68 L36 78 Z' fill='%23D6A85F'/%3E%3Cpath d='M42 54 L58 54' stroke='%23090A0C' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='4.5' fill='%23D6A85F' stroke='%23090A0C' stroke-width='1.5'/%3E%3C/svg%3E" />
   <link rel="icon" type="image/png" href="img/atlas_symbol.png" />
   <link rel="apple-touch-icon" href="img/atlas_symbol.png" />
-  <link rel="alternate icon" href="atlas_symbol.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* Токены согласно разделу 4 и Цветовой таблице Брендбука ATLAS 2026 */
+    /* Цветовые токены согласно Брендбуку ATLAS 2026 (Dark / Light) */
     :root {
-      --bg: #090A0C;             /* ATLAS Black */
-      --panel: #111316;          /* Graphite */
-      --panel-2: #17191D;        /* Deep Graphite */
-      --text: #F2EEE5;           /* Ivory */
-      --muted: #B8B1A4;          /* Muted Ivory */
-      --gold: #D6A85F;           /* ATLAS Gold */
-      --gold-dark: #6F5630;      /* Dark Gold */
-      --status: #AABF9A;         /* Soft Green */
+      --bg: #090A0C;
+      --panel: #111316;
+      --panel-2: #17191D;
+      --text: #F2EEE5;
+      --muted: #B8B1A4;
+      --gold: #D6A85F;
+      --gold-dark: #6F5630;
+      --status: #AABF9A;
 
       --line: rgba(214, 168, 95, 0.22);
       --line-soft: rgba(242, 238, 229, 0.08);
@@ -35,14 +35,15 @@
     }
 
     body[data-theme="light"] {
-      --bg: #F2EEE5;             /* Ivory */
-      --panel: #FAF8F3;          /* Surface Light */
-      --panel-2: #E8E3D8;        /* Surface 2 Light */
-      --text: #111316;           /* Graphite */
-      --muted: #625E57;          /* Muted Dark */
-      --gold: #B8863B;           /* Darker Gold for Contrast */
+      --bg: #F2EEE5;
+      --panel: #FAF8F3;
+      --panel-2: #E8E3D8;
+      --text: #111316;
+      --muted: #625E57;
+      --gold: #B8863B;
       --gold-dark: #80622E;
       --status: #71885F;
+
       --line: rgba(184, 134, 59, 0.28);
       --line-soft: rgba(17, 19, 22, 0.09);
       --shadow: 0 20px 60px rgba(98, 94, 87, 0.16);
@@ -60,7 +61,6 @@
       overflow-x: hidden;
     }
 
-    /* Фоновый картографический чертёжный слой (Раздел 05 Брендбука) */
     body::before {
       content: "";
       position: fixed;
@@ -124,7 +124,7 @@
       gap: 20px;
     }
 
-    /* Сегментированный переключатель темы (Раздел 4 Брендбука) */
+    /* Сегментированный переключатель согласно Брендбуку */
     .theme-switcher {
       display: flex;
       align-items: center;
@@ -156,7 +156,7 @@
       background: var(--panel-2);
     }
 
-    /* Статус строго по разделу 6 брендбука: «СИСТЕМА АКТИВНА» */
+    /* Статус: СИСТЕМА АКТИВНА */
     .status {
       display: flex;
       align-items: center;
@@ -177,7 +177,7 @@
       box-shadow: 0 0 10px var(--status);
     }
 
-    /* ---------- ГЕРОИЧЕСКИЙ БЛОК ---------- */
+    /* ---------- ГЕРОИЧЕСКИЙ БЛОК: ОТКУДА → КУДА ---------- */
     .hero {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 500px;
@@ -231,7 +231,6 @@
       letter-spacing: .04em;
     }
 
-    /* Фоновый компас в блоке */
     .hero-compass-bg {
       position: absolute;
       top: 0;
@@ -255,7 +254,6 @@
       opacity: 0.15;
     }
 
-    /* Построитель маршрута: ОТКУДА → КУДА (Раздел 06 Брендбука) */
     .route-builder {
       padding: 42px 36px;
       background: var(--panel);
@@ -1140,14 +1138,16 @@
 
 <script>
 (() => {
-  // PWA Service Worker (офлайн-кэш для подвальных зон)
+  // PWA Service Worker (с принудительным обновлением кэша)
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
+      navigator.serviceWorker.register('./sw.js').then(reg => {
+        reg.update();
+      }).catch(() => {});
     });
   }
 
-  // Переключение цветовых тем (DARK / LIGHT / SYSTEM) согласно брендбуку
+  // Переключение цветовых тем (DARK / LIGHT / SYSTEM)
   const themeButtons = {
     system: document.getElementById('btnThemeSystem'),
     light: document.getElementById('btnThemeLight'),
@@ -1370,7 +1370,7 @@
     }
   });
 
-  // Воспроизведение реальных MP3-файлов без циклических сбоев (Раздел 7 Брендбука)
+  // Воспроизведение реальных MP3-файлов (Раздел 7 Брендбука)
   let currentAudio = null;
   let playSessionId = 0;
 
@@ -1464,7 +1464,7 @@
     audio.src = candidates[idx];
   }
 
-  // Ненавязчивое сообщение об ошибке дирекции (Раздел 9 Брендбука)
+  // Сообщение об ошибке
   const modal = document.getElementById("modal");
   function closeModal() { modal.classList.remove("show"); }
 
@@ -1493,7 +1493,6 @@
     window.location.href = `sms:+79028765792?body=${encodeURIComponent(sms)}`;
   });
 
-  // Быстрый выбор направления
   document.querySelectorAll(".quick-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       toEl.value = btn.dataset.dest;
