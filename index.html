@@ -969,8 +969,8 @@
         <label for="from">Откуда</label>
         <div class="select-wrap">
           <select id="from" aria-label="Исходная точка">
-            <option value="entrance">Служебный вход (1 этаж)</option>
-            <option value="buffet">Буфет (цоколь)</option>
+            <option value="entrance">Служебный вход (–1 этаж)</option>
+            <option value="buffet">Буфет (–1 этаж)</option>
             <option value="main_stage">Основная сцена (1 этаж)</option>
             <option value="small_stage">Малая сцена (2 этаж)</option>
             <option value="dressing_rooms">Гримёрный блок (2 этаж)</option>
@@ -983,12 +983,12 @@
         <label for="to">Куда</label>
         <div class="select-wrap">
           <select id="to" aria-label="Пункт назначения">
-            <option value="buffet">Буфет (цоколь)</option>
+            <option value="buffet">Буфет (–1 этаж)</option>
             <option value="main_stage">Основная сцена (1 этаж)</option>
             <option value="small_stage">Малая сцена (2 этаж)</option>
             <option value="dressing_rooms">Гримёрный блок (2 этаж)</option>
             <option value="admin">Администрация (3 этаж)</option>
-            <option value="entrance">Служебный вход (1 этаж)</option>
+            <option value="entrance">Служебный вход (–1 этаж)</option>
           </select>
         </div>
       </div>
@@ -1009,7 +1009,7 @@
         <span class="quick-arrow" aria-hidden="true"></span>
       </button>
       <button class="quick-btn" data-dest="buffet">
-        <span><span class="quick-name">Буфет</span><span class="quick-meta">Цоколь · кофе</span></span>
+        <span><span class="quick-name">Буфет</span><span class="quick-meta">–1 этаж · кофе</span></span>
         <span class="quick-arrow" aria-hidden="true"></span>
       </button>
       <button class="quick-btn" data-dest="small_stage">
@@ -1025,7 +1025,7 @@
         <span class="quick-arrow" aria-hidden="true"></span>
       </button>
       <button class="quick-btn" data-dest="entrance">
-        <span><span class="quick-name">Служебный вход</span><span class="quick-meta">1 этаж · КПП</span></span>
+        <span><span class="quick-name">Служебный вход</span><span class="quick-meta">–1 этаж · КПП</span></span>
         <span class="quick-arrow" aria-hidden="true"></span>
       </button>
     </div>
@@ -1187,8 +1187,8 @@
 
   // 6 утверждённых ключевых точек театра
   const locations = {
-    entrance:       { name: "Служебный вход", floor: "1 этаж" },
-    buffet:         { name: "Буфет",          floor: "Цоколь" },
+    entrance:       { name: "Служебный вход", floor: "–1 этаж" },
+    buffet:         { name: "Буфет",          floor: "–1 этаж" },
     main_stage:     { name: "Основная сцена", floor: "1 этаж" },
     small_stage:    { name: "Малая сцена",    floor: "2 этаж" },
     dressing_rooms: { name: "Гримёрный блок", floor: "2 этаж" },
@@ -1279,6 +1279,12 @@
     return null;
   }
 
+  function getFloorNumber(floorStr) {
+    if (floorStr.includes("–1") || floorStr.includes("-1")) return -1;
+    const match = floorStr.match(/\d+/);
+    return match ? parseInt(match[0], 10) : 0;
+  }
+
   function buildRoute() {
     stopAudio();
     const fromKey = fromEl.value;
@@ -1314,7 +1320,14 @@
 
     const differentFloor = a.floor !== b.floor;
     document.getElementById("floorBadge").textContent = differentFloor ? `${a.floor} → ${b.floor}` : a.floor;
-    document.getElementById("floorArrow").textContent = differentFloor ? (b.floor.includes("Цоколь") ? "↓" : "↑") : "→";
+    
+    if (differentFloor) {
+      const numA = getFloorNumber(a.floor);
+      const numB = getFloorNumber(b.floor);
+      document.getElementById("floorArrow").textContent = numB > numA ? "↑" : "↓";
+    } else {
+      document.getElementById("floorArrow").textContent = "→";
+    }
 
     const rawRoute = matrix[fromKey] && matrix[fromKey][toKey] ? matrix[fromKey][toKey] : "";
     const steps = rawRoute.split(/,\s+|\.\s+/).filter(s => s.trim().length > 0);
@@ -1370,7 +1383,7 @@
     }
   });
 
-  // Воспроизведение реальных MP3-файлов (Раздел 7 Брендбука)
+  // Воспроизведение реальных MP3-файлов (Раздел 7 Брендбука)[cite: 1, 2]
   let currentAudio = null;
   let playSessionId = 0;
 
