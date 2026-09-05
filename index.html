@@ -7,7 +7,7 @@
   <meta name="description" content="ATLAS — система ориентирования и театральной навигации." />
   <title>ATLAS — Театральный навигатор</title>
 
-  <!-- Фирменный знак ATLAS во вкладке (сначала прямой встроенный SVG, затем файл) -->
+  <!-- Фирменный знак ATLAS во вкладке -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23090A0C'/%3E%3Ccircle cx='50' cy='50' r='38' fill='none' stroke='%236F5630' stroke-width='1.2' stroke-dasharray='2 2'/%3E%3Ccircle cx='50' cy='50' r='24' fill='none' stroke='%23D6A85F' stroke-width='1.2'/%3E%3Cpath d='M50 4 L54 42 L96 50 L54 58 L50 96 L46 58 L4 50 L46 42 Z' fill='%23B8863B'/%3E%3Cpath d='M50 4 L64 78 L50 68 L36 78 Z' fill='%23D6A85F'/%3E%3Cpath d='M42 54 L58 54' stroke='%23090A0C' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='4.5' fill='%23D6A85F' stroke='%23090A0C' stroke-width='1.5'/%3E%3C/svg%3E" />
   <link rel="icon" type="image/png" href="img/atlas_symbol.png" />
   <link rel="apple-touch-icon" href="img/atlas_symbol.png" />
@@ -124,7 +124,6 @@
       gap: 20px;
     }
 
-    /* Сегментированный переключатель согласно Брендбуку */
     .theme-switcher {
       display: flex;
       align-items: center;
@@ -156,7 +155,6 @@
       background: var(--panel-2);
     }
 
-    /* Статус: СИСТЕМА АКТИВНА */
     .status {
       display: flex;
       align-items: center;
@@ -177,7 +175,7 @@
       box-shadow: 0 0 10px var(--status);
     }
 
-    /* ---------- ГЕРОИЧЕСКИЙ БЛОК: ОТКУДА → КУДА ---------- */
+    /* ---------- ГЕРОИЧЕСКИЙ БЛОК ---------- */
     .hero {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 500px;
@@ -559,7 +557,7 @@
       display: grid;
       grid-template-columns: 44px 1fr;
       gap: 16px;
-      padding: 16px 0;
+      padding: 18px 0;
       border-top: 1px solid var(--line-soft);
       position: relative;
     }
@@ -571,7 +569,7 @@
     }
 
     .step-main {
-      font-size: 13.5px;
+      font-size: 14px;
       color: var(--text);
       line-height: 1.5;
     }
@@ -580,15 +578,24 @@
     .step.active .step-no { font-weight: bold; }
     .step.active .step-main { font-weight: 600; color: var(--gold); }
 
+    .route-photo-wrap {
+      margin-top: 12px;
+      max-width: 320px;
+      width: 100%;
+      border: 1px solid var(--line-soft);
+      background: var(--panel-2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
     .route-photo {
       display: block;
-      max-width: 260px;
       width: 100%;
       height: auto;
-      margin-top: 10px;
-      border: 1px solid var(--line-soft);
+      object-fit: cover;
+      aspect-ratio: 16 / 9;
       background: var(--panel);
-      border-radius: 2px;
+      transition: opacity 0.2s;
     }
 
     .next {
@@ -927,7 +934,7 @@
 </head>
 <body>
 <div class="shell">
-  <!-- ШАПКА С ЛОГОТИПОМ, ПЕРЕКЛЮЧАТЕЛЕМ ТЕМЫ И СТАТУСОМ -->
+  <!-- ШАПКА -->
   <header class="top">
     <div class="brand">
       <img 
@@ -951,14 +958,14 @@
     </div>
   </header>
 
-  <!-- ГЕРОИЧЕСКИЙ БЛОК: ОТКУДА → КУДА -->
+  <!-- ГЕРОИЧЕСКИЙ БЛОК -->
   <section class="hero">
     <div class="hero-compass-bg" aria-hidden="true"></div>
 
     <div class="hero-copy">
       <div class="eyebrow">Ориентирование по площадке</div>
       <h1>Найдите<br><span>нужное место.</span></h1>
-      <p>Выберите исходную точку и пункт назначения. ATLAS построит чёткий пошаговый маршрут с ориентирами и голосовым сопровождением.</p>
+      <p>Выберите исходную точку и пункт назначения. ATLAS построит чёткий пошаговый маршрут с визуальными ориентирами и голосовым сопровождением.</p>
       <div class="hero-note">Автономный навигатор без установки приложений. Работает в подвальных помещениях и за кулисами.</div>
     </div>
 
@@ -1138,7 +1145,7 @@
 
 <script>
 (() => {
-  // PWA Service Worker (с принудительным обновлением кэша)
+  // Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').then(reg => {
@@ -1147,7 +1154,7 @@
     });
   }
 
-  // Переключение цветовых тем (DARK / LIGHT / SYSTEM)
+  // Темы оформления
   const themeButtons = {
     system: document.getElementById('btnThemeSystem'),
     light: document.getElementById('btnThemeLight'),
@@ -1185,7 +1192,7 @@
   const initialTheme = localStorage.getItem('atlas_theme_preference') || 'system';
   applyTheme(initialTheme);
 
-  // 6 утверждённых ключевых точек театра
+  // 6 ключевых точек площадки
   const locations = {
     entrance:       { name: "Служебный вход", floor: "–1 этаж" },
     buffet:         { name: "Буфет",          floor: "–1 этаж" },
@@ -1195,49 +1202,221 @@
     admin:          { name: "Администрация",  floor: "3 этаж" }
   };
 
-  // Проверенная топологическая матрица маршрутов
-  const matrix = {
-    "entrance": {
-      "buffet": "Вперёд, направо, налево и вниз по лестнице, по длинному коридору, 5 ступеней вверх, направо в дверь, справа зал буфета.",
-      "main_stage": "Вперёд, направо до указателя «Проход к гримёрным», вверх на 1 этаж, налево на сцену.",
-      "small_stage": "Вперёд, направо, налево вниз по лестнице, прямо до конца длинного коридора, направо, вверх на 2 этажа, прямо напротив лестницы малая сцена.",
-      "dressing_rooms": "Вперёд, направо до указателя «Проход к гримёрным», вверх на 2 этажа, прямо по коридору перед вами 4 гримерных.",
-      "admin": "Вперёд, налево до металлической двери со стеклянным блоком, вверх на 3 этаж."
+  // Пошаговая структура: точный текст шага и привязанный файл фото
+  const routeData = {
+    entrance: {
+      buffet: [
+        { text: "Вперёд от служебного входа", photo: "point_entrance_forward.jpg" },
+        { text: "Направо по коридору", photo: "point_corridor_turn_right.jpg" },
+        { text: "Налево и вниз по лестнице", photo: "point_stairs_corridor_down.jpg" },
+        { text: "По длинному коридору", photo: "point_long_corridor.jpg" },
+        { text: "5 ступеней вверх", photo: "point_buffet_stairs_5.jpg" },
+        { text: "Направо в дверь, справа зал буфета", photo: "loc_buffet.jpg" }
+      ],
+      main_stage: [
+        { text: "Вперёд от служебного входа", photo: "point_entrance_forward.jpg" },
+        { text: "Направо до указателя «Проход к гримёрным»", photo: "point_sign_dressing.jpg" },
+        { text: "Вверх на 1 этаж", photo: "point_stairs_up_1fl.jpg" },
+        { text: "Налево на сцену", photo: "loc_main_stage.jpg" }
+      ],
+      small_stage: [
+        { text: "Вперёд от служебного входа", photo: "point_entrance_forward.jpg" },
+        { text: "Направо", photo: "point_corridor_turn_right.jpg" },
+        { text: "Налево вниз по лестнице", photo: "point_stairs_corridor_down.jpg" },
+        { text: "Прямо до конца длинного коридора", photo: "point_long_corridor.jpg" },
+        { text: "Направо", photo: "point_corridor_end_right.jpg" },
+        { text: "Вверх на 2 этажа", photo: "point_stairs_up_2fl.jpg" },
+        { text: "Прямо напротив лестницы малая сцена", photo: "loc_small_stage.jpg" }
+      ],
+      dressing_rooms: [
+        { text: "Вперёд от служебного входа", photo: "point_entrance_forward.jpg" },
+        { text: "Направо до указателя «Проход к гримёрным»", photo: "point_sign_dressing.jpg" },
+        { text: "Вверх на 2 этажа", photo: "point_stairs_up_2fl.jpg" },
+        { text: "Прямо по коридору перед вами 4 гримерных", photo: "loc_dressing_rooms.jpg" }
+      ],
+      admin: [
+        { text: "Вперёд от служебного входа", photo: "point_entrance_forward.jpg" },
+        { text: "Налево до металлической двери со стеклянным блоком", photo: "point_metal_glass_door.jpg" },
+        { text: "Вверх на 3 этаж к администрации", photo: "point_admin_stairs.jpg" }
+      ]
     },
-    "buffet": {
-      "entrance": "Налево из двери, 5 ступеней вниз, по длинному коридору, вверх по лестнице, направо к выходу.",
-      "main_stage": "Налево из двери, 5 ступеней вниз, по коридору, вверх по лестнице, прямо к указателю «Проход к гримёрным», вверх на 1 этаж, налево на сцену.",
-      "small_stage": "Направо из двери, направо по коридору до конца, направо, вверх на 2 этажа.",
-      "dressing_rooms": "Налево из двери, 5 ступеней вниз, по коридору, вверх 5 ступеней до указателя «Проход к гримёрным», вверх на 2 этажа, прямо по коридору перед вами 4 гримерных.",
-      "admin": "Налево из двери, 5 ступеней вниз, по коридору, вверх 5 ступеней, направо до металлической двери со стеклянным блоком, вверх на 3 этаж."
+    buffet: {
+      entrance: [
+        { text: "Налево из двери буфета", photo: "point_buffet_exit_left.jpg" },
+        { text: "5 ступеней вниз", photo: "point_buffet_stairs_5.jpg" },
+        { text: "По длинному коридору", photo: "point_long_corridor.jpg" },
+        { text: "Вверх по лестнице", photo: "point_stairs_corridor_down.jpg" },
+        { text: "Направо к служебному входу", photo: "loc_entrance.jpg" }
+      ],
+      main_stage: [
+        { text: "Налево из двери буфета", photo: "point_buffet_exit_left.jpg" },
+        { text: "5 ступеней вниз", photo: "point_buffet_stairs_5.jpg" },
+        { text: "По коридору прямо", photo: "point_long_corridor.jpg" },
+        { text: "Вверх по лестнице", photo: "point_stairs_corridor_down.jpg" },
+        { text: "Прямо к указателю «Проход к гримёрным»", photo: "point_sign_dressing.jpg" },
+        { text: "Вверх на 1 этаж", photo: "point_stairs_up_1fl.jpg" },
+        { text: "Налево на сцену", photo: "loc_main_stage.jpg" }
+      ],
+      small_stage: [
+        { text: "Направо из двери буфета", photo: "point_buffet_exit_right.jpg" },
+        { text: "По коридору до конца", photo: "point_long_corridor.jpg" },
+        { text: "Направо", photo: "point_corridor_end_right.jpg" },
+        { text: "Вверх на 2 этажа", photo: "point_stairs_up_2fl.jpg" },
+        { text: "Прямо напротив лестницы малая сцена", photo: "loc_small_stage.jpg" }
+      ],
+      dressing_rooms: [
+        { text: "Налево из двери буфета", photo: "point_buffet_exit_left.jpg" },
+        { text: "5 ступеней вниз", photo: "point_buffet_stairs_5.jpg" },
+        { text: "По коридору, затем вверх 5 ступеней", photo: "point_long_corridor.jpg" },
+        { text: "До указателя «Проход к гримёрным»", photo: "point_sign_dressing.jpg" },
+        { text: "Вверх на 2 этажа", photo: "point_stairs_up_2fl.jpg" },
+        { text: "Прямо по коридору перед вами 4 гримерных", photo: "loc_dressing_rooms.jpg" }
+      ],
+      admin: [
+        { text: "Налево из двери буфета", photo: "point_buffet_exit_left.jpg" },
+        { text: "5 ступеней вниз", photo: "point_buffet_stairs_5.jpg" },
+        { text: "По коридору, затем вверх 5 ступеней", photo: "point_long_corridor.jpg" },
+        { text: "Направо до металлической двери со стеклянным блоком", photo: "point_metal_glass_door.jpg" },
+        { text: "Вверх на 3 этаж к администрации", photo: "point_admin_stairs.jpg" }
+      ]
     },
-    "main_stage": {
-      "entrance": "Направо в дверь, вниз на 1 этаж, налево по коридору, прямо к выходу.",
-      "buffet": "Направо в дверь, вниз на 1 этаж, прямо к лестнице вниз, по длинному коридору, 5 ступеней вверх, направо.",
-      "small_stage": "Направо в дверь, вниз на 1 этаж, по лестнице вниз в длинный коридор, до конца, направо, вверх на 2 этажа.",
-      "dressing_rooms": "Направо в дверь, вверх на один этаж, прямо по коридору перед вами 4 гримерных.",
-      "admin": "Направо в дверь, вверх на два этажа, налево до конца."
+    main_stage: {
+      entrance: [
+        { text: "Направо в дверь со сцены", photo: "point_door_main_stage_exit.jpg" },
+        { text: "Вниз на 1 этаж", photo: "point_stairs_down_1fl.jpg" },
+        { text: "Налево по коридору", photo: "point_corridor_turn_left.jpg" },
+        { text: "Прямо к служебному выходу", photo: "loc_entrance.jpg" }
+      ],
+      buffet: [
+        { text: "Направо в дверь со сцены", photo: "point_door_main_stage_exit.jpg" },
+        { text: "Вниз на 1 этаж", photo: "point_stairs_down_1fl.jpg" },
+        { text: "Прямо к лестнице вниз", photo: "point_stairs_corridor_down.jpg" },
+        { text: "По длинному коридору", photo: "point_long_corridor.jpg" },
+        { text: "5 ступеней вверх", photo: "point_buffet_stairs_5.jpg" },
+        { text: "Направо в дверь буфета", photo: "loc_buffet.jpg" }
+      ],
+      small_stage: [
+        { text: "Направо в дверь со сцены", photo: "point_door_main_stage_exit.jpg" },
+        { text: "Вниз на 1 этаж", photo: "point_stairs_down_1fl.jpg" },
+        { text: "По лестнице вниз в длинный коридор", photo: "point_stairs_corridor_down.jpg" },
+        { text: "По длинному коридору до конца", photo: "point_long_corridor.jpg" },
+        { text: "Направо к лестничному маршу", photo: "point_corridor_end_right.jpg" },
+        { text: "Вверх на 2 этажа", photo: "point_stairs_up_2fl.jpg" },
+        { text: "Прямо напротив лестницы малая сцена", photo: "loc_small_stage.jpg" }
+      ],
+      dressing_rooms: [
+        { text: "Направо в дверь со сцены", photo: "point_door_main_stage_exit.jpg" },
+        { text: "Вверх на 1 этаж", photo: "point_stairs_up_1fl.jpg" },
+        { text: "Прямо по коридору перед вами 4 гримерных", photo: "loc_dressing_rooms.jpg" }
+      ],
+      admin: [
+        { text: "Направо в дверь со сцены", photo: "point_door_main_stage_exit.jpg" },
+        { text: "Вверх на 2 этажа", photo: "point_stairs_up_2fl.jpg" },
+        { text: "Налево до конца к кабинетам администрации", photo: "point_admin_corridor_3fl.jpg" }
+      ]
     },
-    "small_stage": {
-      "entrance": "Вниз на 2 этажа, налево в коридор, прямо до конца, вверх по лестнице, направо к выходу.",
-      "buffet": "Вниз на 2 этажа, налево в коридор, прямо до двери буфета, налево.",
-      "main_stage": "Вниз на 2 этажа, налево в коридор, вверх по лестнице, прямо до указателя «Проход к гримёрным», вверх на 1 этаж, налево на сцену.",
-      "dressing_rooms": "Вниз на два этажа, налево по коридору, до указателя «Проход к гримёрным», вверх на два этажа, прямо по коридору перед вами четыре гримерных.",
-      "admin": "Вниз на два этажа, налево по коридору, до конца, направо до металлической двери со стеклянным блоком, вверх на третий этаж."
+    small_stage: {
+      entrance: [
+        { text: "Вниз на 2 этажа", photo: "point_stairs_down_2fl.jpg" },
+        { text: "Налево в коридор", photo: "point_corridor_turn_left.jpg" },
+        { text: "Прямо до конца коридора", photo: "point_long_corridor.jpg" },
+        { text: "Вверх по лестнице", photo: "point_stairs_corridor_down.jpg" },
+        { text: "Направо к служебному выходу", photo: "loc_entrance.jpg" }
+      ],
+      buffet: [
+        { text: "Вниз на 2 этажа", photo: "point_stairs_down_2fl.jpg" },
+        { text: "Налево в коридор", photo: "point_corridor_turn_left.jpg" },
+        { text: "Прямо по коридору до двери буфета", photo: "point_long_corridor.jpg" },
+        { text: "Налево в зал буфета", photo: "loc_buffet.jpg" }
+      ],
+      main_stage: [
+        { text: "Вниз на 2 этажа", photo: "point_stairs_down_2fl.jpg" },
+        { text: "Налево в коридор", photo: "point_corridor_turn_left.jpg" },
+        { text: "Вверх по лестнице", photo: "point_stairs_corridor_down.jpg" },
+        { text: "Прямо до указателя «Проход к гримёрным»", photo: "point_sign_dressing.jpg" },
+        { text: "Вверх на 1 этаж", photo: "point_stairs_up_1fl.jpg" },
+        { text: "Налево на сцену", photo: "loc_main_stage.jpg" }
+      ],
+      dressing_rooms: [
+        { text: "Вниз на 2 этажа", photo: "point_stairs_down_2fl.jpg" },
+        { text: "Налево по коридору", photo: "point_corridor_turn_left.jpg" },
+        { text: "До указателя «Проход к гримёрным»", photo: "point_sign_dressing.jpg" },
+        { text: "Вверх на 2 этажа", photo: "point_stairs_up_2fl.jpg" },
+        { text: "Прямо по коридору перед вами 4 гримерных", photo: "loc_dressing_rooms.jpg" }
+      ],
+      admin: [
+        { text: "Вниз на 2 этажа", photo: "point_stairs_down_2fl.jpg" },
+        { text: "Налево по коридору до конца", photo: "point_corridor_turn_left.jpg" },
+        { text: "Направо до металлической двери со стеклянным блоком", photo: "point_metal_glass_door.jpg" },
+        { text: "Вверх на 3 этаж к администрации", photo: "point_admin_stairs.jpg" }
+      ]
     },
-    "dressing_rooms": {
-      "entrance": "Вниз на 2 этажа, через металлическую дверь прямо по коридору, направо к выходу.",
-      "buffet": "Вниз на 2 этажа, прямо и вниз по лестнице, по длинному коридору, 5 ступеней вверх, направо в дверь, справа зал буфета.",
-      "main_stage": "Вниз на один этаж, налево на сцену.",
-      "small_stage": "Вниз на 2 этажа, через дверь в холл, направо, вниз по лестнице, по коридору до конца, направо, вверх на 2 этажа.",
-      "admin": "По лестничной клетке подняться на 1 этаж выше (на 3 этаж)."
+    dressing_rooms: {
+      entrance: [
+        { text: "Вниз на 2 этажа", photo: "point_stairs_down_2fl.jpg" },
+        { text: "Через металлическую дверь прямо по коридору", photo: "point_metal_glass_door.jpg" },
+        { text: "Направо к служебному выходу", photo: "loc_entrance.jpg" }
+      ],
+      buffet: [
+        { text: "Вниз на 2 этажа", photo: "point_stairs_down_2fl.jpg" },
+        { text: "Прямо и вниз по лестнице", photo: "point_stairs_corridor_down.jpg" },
+        { text: "По длинному коридору", photo: "point_long_corridor.jpg" },
+        { text: "5 ступеней вверх", photo: "point_buffet_stairs_5.jpg" },
+        { text: "Направо в дверь, справа зал буфета", photo: "loc_buffet.jpg" }
+      ],
+      main_stage: [
+        { text: "Вниз на 1 этаж", photo: "point_stairs_down_1fl.jpg" },
+        { text: "Налево на сцену", photo: "loc_main_stage.jpg" }
+      ],
+      small_stage: [
+        { text: "Вниз на 2 этажа", photo: "point_stairs_down_2fl.jpg" },
+        { text: "Через дверь в холл", photo: "point_hall_door.jpg" },
+        { text: "Направо, вниз по лестнице", photo: "point_stairs_corridor_down.jpg" },
+        { text: "По коридору до конца", photo: "point_long_corridor.jpg" },
+        { text: "Направо", photo: "point_corridor_end_right.jpg" },
+        { text: "Вверх на 2 этажа", photo: "point_stairs_up_2fl.jpg" },
+        { text: "Прямо напротив лестницы малая сцена", photo: "loc_small_stage.jpg" }
+      ],
+      admin: [
+        { text: "По лестничной клетке подняться на 1 этаж выше (на 3 этаж)", photo: "point_admin_stairs.jpg" },
+        { text: "Прямо по коридору к кабинетам администрации", photo: "loc_admin.jpg" }
+      ]
     },
-    "admin": {
-      "entrance": "Вниз на 3 этажа, через металлическую дверь со стеклом направо по коридору, направо к выходу.",
-      "buffet": "Вниз на 3 этажа, через дверь направо, прямо по коридору, налево вниз по лестнице, по длинному коридору, 5 ступеней вверх, направо.",
-      "main_stage": "Вниз на 3 этажа, через дверь в холл, направо до указателя, вверх на 1 этаж, налево на сцену.",
-      "small_stage": "Вниз на 3 этажа, через дверь по коридору, налево, вниз по лестнице, по коридору до конца, направо, вверх на 2 этажа.",
-      "dressing_rooms": "Через третий этаж пройти мимо кабинетов до лестничной клетки, спуститься на один этаж."
+    admin: {
+      entrance: [
+        { text: "Вниз на 3 этажа", photo: "point_stairs_down_3fl.jpg" },
+        { text: "Через металлическую дверь со стеклом направо по коридору", photo: "point_metal_glass_door.jpg" },
+        { text: "Направо к служебному выходу", photo: "loc_entrance.jpg" }
+      ],
+      buffet: [
+        { text: "Вниз на 3 этажа", photo: "point_stairs_down_3fl.jpg" },
+        { text: "Через дверь направо, прямо по коридору", photo: "point_corridor_turn_right.jpg" },
+        { text: "Налево вниз по лестнице", photo: "point_stairs_corridor_down.jpg" },
+        { text: "По длинному коридору", photo: "point_long_corridor.jpg" },
+        { text: "5 ступеней вверх", photo: "point_buffet_stairs_5.jpg" },
+        { text: "Направо в зал буфета", photo: "loc_buffet.jpg" }
+      ],
+      main_stage: [
+        { text: "Вниз на 3 этажа", photo: "point_stairs_down_3fl.jpg" },
+        { text: "Через дверь в холл", photo: "point_hall_door.jpg" },
+        { text: "Направо до указателя", photo: "point_sign_dressing.jpg" },
+        { text: "Вверх на 1 этаж", photo: "point_stairs_up_1fl.jpg" },
+        { text: "Налево на сцену", photo: "loc_main_stage.jpg" }
+      ],
+      small_stage: [
+        { text: "Вниз на 3 этажа", photo: "point_stairs_down_3fl.jpg" },
+        { text: "Через дверь по коридору", photo: "point_hall_door.jpg" },
+        { text: "Налево, вниз по лестнице", photo: "point_stairs_corridor_down.jpg" },
+        { text: "По коридору до конца", photo: "point_long_corridor.jpg" },
+        { text: "Направо", photo: "point_corridor_end_right.jpg" },
+        { text: "Вверх на 2 этажа", photo: "point_stairs_up_2fl.jpg" },
+        { text: "Прямо напротив лестницы малая сцена", photo: "loc_small_stage.jpg" }
+      ],
+      dressing_rooms: [
+        { text: "Через 3 этаж пройти мимо кабинетов до лестничной клетки", photo: "point_admin_corridor_3fl.jpg" },
+        { text: "Спуститься на 1 этаж вниз (на 2 этаж)", photo: "point_stairs_down_1fl.jpg" },
+        { text: "Перед вами коридор гримёрного блока", photo: "loc_dressing_rooms.jpg" }
+      ]
     }
   };
 
@@ -1255,28 +1434,6 @@
     toast.classList.add("show");
     clearTimeout(toastMsg.timer);
     toastMsg.timer = setTimeout(() => toast.classList.remove("show"), 2800);
-  }
-
-  function matchStepPhoto(stepText, startKey, targetKey) {
-    const t = stepText.toLowerCase();
-    if (startKey === 'buffet' && targetKey === 'admin') {
-      if (t.includes("металлическ") || t.includes("стеклянн")) return "point_metal_glass_door.jpg";
-      if (t.includes("3 этаж") || t.includes("администраци")) return "loc_admin.jpg";
-      return null;
-    }
-    if (t.includes("зал буфета") || t.includes("буфет") || t.includes("двери буфета")) return "loc_buffet.jpg";
-    if (t.includes("основную сцену") || t.includes("на сцену") || t.includes("основной сцены")) return "loc_main_stage.jpg";
-    if (t.includes("малая сцена") || t.includes("малому залу") || t.includes("малой сцене")) return "loc_small_stage.jpg";
-    if (t.includes("гримерных") || t.includes("гримёрный") || t.includes("гримерки")) return "loc_dressing_rooms.jpg";
-    if (t.includes("администраци")) return "loc_admin.jpg";
-    if (t.includes("выход") || t.includes("служебного входа") || t.includes("входа")) return "loc_entrance.jpg";
-    if (t.includes("указател") || t.includes("проход к гримёрным")) return "point_sign_dressing.jpg";
-    if (t.includes("металлическ") || t.includes("стеклянн")) return "point_metal_glass_door.jpg";
-    if (t.includes("5 ступеней вверх") && (startKey === 'entrance' || targetKey === 'buffet')) return "point_buffet_stairs_5.jpg";
-    if (t.includes("длинному коридору") || t.includes("длинный коридор")) return "point_long_corridor.jpg";
-    if (t.includes("вниз по лестнице")) return "point_stairs_corridor_down.jpg";
-    if (t.includes("вверх на 3 этаж") || t.includes("вниз на 3 этажа")) return "point_admin_stairs.jpg";
-    return null;
   }
 
   function getFloorNumber(floorStr) {
@@ -1300,9 +1457,23 @@
       document.getElementById("sideToFloor").textContent = locations[fromKey].floor;
       document.getElementById("floorBadge").textContent = locations[fromKey].floor;
       document.getElementById("floorArrow").textContent = "→";
-      activeSteps = [[locations[fromKey].name, "Вы находитесь в выбранном помещении.", ""]];
+
+      const selfPhoto = `loc_${fromKey}.jpg`;
+      activeSteps = [{ text: "Вы находитесь в выбранном помещении", photo: selfPhoto }];
       currentStep = 0;
-      document.getElementById("stepList").innerHTML = "";
+
+      const list = document.getElementById("stepList");
+      list.innerHTML = `
+        <div class="step active" data-index="0">
+          <div class="step-no">01</div>
+          <div>
+            <div class="step-main">Вы находитесь в выбранном помещении.</div>
+            <div class="route-photo-wrap">
+              <img src="img/${selfPhoto}" class="route-photo" onerror="this.onerror=null; this.src='${selfPhoto}';" alt="Ориентир">
+            </div>
+          </div>
+        </div>`;
+
       renderSteps();
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
@@ -1329,24 +1500,20 @@
       document.getElementById("floorArrow").textContent = "→";
     }
 
-    const rawRoute = matrix[fromKey] && matrix[fromKey][toKey] ? matrix[fromKey][toKey] : "";
-    const steps = rawRoute.split(/,\s+|\.\s+/).filter(s => s.trim().length > 0);
-
-    activeSteps = steps.map(step => [step.trim().replace(/^./, s => s.toUpperCase()), step.trim(), ""]);
+    const steps = (routeData[fromKey] && routeData[fromKey][toKey]) ? routeData[fromKey][toKey] : [];
+    activeSteps = steps;
     currentStep = 0;
 
     const list = document.getElementById("stepList");
-    list.innerHTML = steps.map((step, idx) => {
-      const formatted = step.trim().replace(/^./, str => str.toUpperCase());
-      const photoName = matchStepPhoto(step, fromKey, toKey);
-      const photoHtml = photoName
-        ? `<img src="img/${photoName}" class="route-photo" onerror="this.style.display='none'" alt="Ориентир">`
-        : "";
+    list.innerHTML = steps.map((item, idx) => {
+      const formatted = item.text.trim().replace(/^./, str => str.toUpperCase());
       return `<div class="step" data-index="${idx}">
         <div class="step-no">${String(idx + 1).padStart(2, "0")}</div>
         <div>
           <div class="step-main">${formatted}.</div>
-          ${photoHtml}
+          <div class="route-photo-wrap">
+            <img src="img/${item.photo}" class="route-photo" onerror="this.onerror=null; this.src='${item.photo}';" alt="${formatted}">
+          </div>
         </div>
       </div>`;
     }).join("");
@@ -1365,7 +1532,7 @@
 
     const s = activeSteps[currentStep];
     if (s) {
-      document.getElementById("currentText").textContent = s[0] + ".";
+      document.getElementById("currentText").textContent = s.text + ".";
       document.getElementById("currentDetail").textContent = `Ориентир ${currentStep + 1} из ${activeSteps.length}. Следуйте указаниям.`;
     }
     document.getElementById("nextBtn").textContent =
@@ -1383,7 +1550,7 @@
     }
   });
 
-  // Воспроизведение реальных MP3-файлов (Раздел 7 Брендбука)[cite: 1, 2]
+  // Аудиоинструкции (готовые MP3)
   let currentAudio = null;
   let playSessionId = 0;
 
@@ -1477,7 +1644,7 @@
     audio.src = candidates[idx];
   }
 
-  // Сообщение об ошибке
+  // Модальное окно сообщения об ошибке
   const modal = document.getElementById("modal");
   function closeModal() { modal.classList.remove("show"); }
 
